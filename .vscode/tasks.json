@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/HelloWorld/VGD-2021.csproj",
+                "${workspaceFolder}/HelloWorld/HelloWorld.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/HelloWorld/VGD-2021.csproj",
+                "${workspaceFolder}/HelloWorld/HelloWorld.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/HelloWorld/VGD-2021.csproj",
+                "${workspaceFolder}/HelloWorld/HelloWorld.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
