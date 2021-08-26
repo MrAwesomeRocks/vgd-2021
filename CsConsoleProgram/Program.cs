@@ -52,7 +52,7 @@ Enter your choice here: ";
                 {
                     // Pick an action
                     Console.Write(ACTION_MESSAGE);
-                    string action = Console.ReadLine();
+                    string action = Console.ReadLine().ToLower();
 
                     if (action.Length > 0)
                     {
@@ -113,7 +113,7 @@ Enter your choice here: ";
             }
 
             Console.Write("Would you like to perform (a)ddition, (s)ubtraction, (m)ultiplication, or (d)ivision: ");
-            string operation = Console.ReadLine();
+            string operation = Console.ReadLine().ToLower();
 
             // Validation
             if (operation.Length == 0)
@@ -178,7 +178,7 @@ Enter your choice here: ";
             }
 
             Console.Write("Would you like to find the (g)reater or (l)esser number: ");
-            string operation = Console.ReadLine();
+            string operation = Console.ReadLine().ToLower();
 
             // Validation
             if (operation.Length == 0)
@@ -212,7 +212,7 @@ Enter your choice here: ";
         private static double s_promptForNumber(string name)
         {
             Console.Write($"Please enter the {name} number, rand for a random int, or nothing for the saved answer, {s_savedAnswer}: ");
-            string raw = Console.ReadLine();
+            string raw = Console.ReadLine().ToLower();
 
             double result;
             try
