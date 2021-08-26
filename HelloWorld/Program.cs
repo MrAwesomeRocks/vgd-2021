@@ -6,17 +6,9 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("HelloWorld!");
-
-            Program2 x = new();
-            x.printStr();
-        }
-    }
-    class Program2
-    {
-        public void printStr()
-        {
-            Console.WriteLine("HelloWorld2!");
+            Console.WriteLine("\"How often do the trains go by?\"");
+            Console.WriteLine("\"So often you won't even notice.\"");
+            Console.WriteLine("- Joliet Jake and Elwood Blues, 1980");
         }
     }
 }
