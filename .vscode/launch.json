@@ -26,11 +26,12 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/CsConsoleProgram/bin/Debug/net5.0/HelloWorld.dll",
+            "program": "${workspaceFolder}/CsConsoleProgram/bin/Debug/net5.0/CsConsoleProgram.dll",
             "args": [],
             "cwd": "${workspaceFolder}/CsConsoleProgram",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
-            "console": "internalConsole",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
             "stopAtEntry": false
         },
         {
