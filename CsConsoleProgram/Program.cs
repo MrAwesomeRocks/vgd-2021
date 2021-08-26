@@ -17,6 +17,8 @@ Would you like to
   - preform an arithmetic (o)peration?
   - (c)ompare two numbers?
   - (s)ave the result of the previous computation?
+  - (q)uit?
+  - or (e)xit?
 
 Enter your choice here: ";
 
@@ -44,7 +46,8 @@ Enter your choice here: ";
                 Console.WriteLine($"\nHello {name}! Welcome to ConCalc, the console-based calculator.");
 
                 // Action loop
-                while (true)
+                bool signedIn = true;
+                while (signedIn)
                 {
                     // Pick an action
                     Console.Write(ACTION_MESSAGE);
@@ -62,6 +65,12 @@ Enter your choice here: ";
                                 break;
                             case 's':
                                 s_savedAnswer = s_previousAnswer;
+                                break;
+                            case 'q':
+                                signedIn = false;
+                                break;
+                            case 'e':
+                                Environment.Exit(0);
                                 break;
                             default:
                                 continue;
