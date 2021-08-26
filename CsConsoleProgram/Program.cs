@@ -25,6 +25,7 @@ Enter your choice here: ";
         // Private vars
         private static double s_previousAnswer;
         private static double s_savedAnswer;
+        private static string s_name;
         private static Random rand = new();
 
         static void Main(string[] args)
@@ -36,15 +37,15 @@ Enter your choice here: ";
             while (true)
             {
                 // Prompt for name
-                string name = "";
-                while (name == "")
+                s_name = "";
+                while (s_name == "")
                 {
                     Console.Write("Please enter your name: ");
-                    name = Console.ReadLine();
+                    s_name = Console.ReadLine();
                 }
 
                 // Welcome message
-                Console.WriteLine($"\nHello {name}! Welcome to ConCalc, the console-based calculator.");
+                Console.WriteLine($"\nHello {s_name}! Welcome to ConCalc, the console-based calculator.");
 
                 // Action loop
                 bool signedIn = true;
@@ -97,7 +98,7 @@ Enter your choice here: ";
             }
             catch (FormatException)
             {
-                Console.WriteLine($"Invalid number!");
+                Console.WriteLine($"Invalid number, {s_name}!");
                 return;
             }
 
@@ -108,7 +109,7 @@ Enter your choice here: ";
             }
             catch (FormatException)
             {
-                Console.WriteLine($"Invalid number!");
+                Console.WriteLine($"Invalid number, {s_name}!");
                 return;
             }
 
@@ -118,7 +119,7 @@ Enter your choice here: ";
             // Validation
             if (operation.Length == 0)
             {
-                Console.WriteLine("You must specify an operation!");
+                Console.WriteLine("You must specify an operation, {s_name}!");
                 return;
             }
 
@@ -142,11 +143,11 @@ Enter your choice here: ";
                         Console.WriteLine($"Invalid operation {operation}!");
                         return;
                 }
-                Console.WriteLine($"\nResult: {s_previousAnswer}\n");
+                Console.WriteLine($"\nHere is your result, {s_name}: {s_previousAnswer}\n");
             }
             catch (ArithmeticException e)
             {
-                Console.WriteLine($"Invalid operation!\nError: {e.Message}");
+                Console.WriteLine($"Invalid operation, {s_name}!\nError: {e.Message}");
             }
         }
 
@@ -162,7 +163,7 @@ Enter your choice here: ";
             }
             catch (FormatException)
             {
-                Console.WriteLine($"Invalid number!");
+                Console.WriteLine($"Invalid number, {s_name}!");
                 return;
             }
 
@@ -173,7 +174,7 @@ Enter your choice here: ";
             }
             catch (FormatException)
             {
-                Console.WriteLine($"Invalid number!");
+                Console.WriteLine($"Invalid number, {s_name}!");
                 return;
             }
 
@@ -183,7 +184,7 @@ Enter your choice here: ";
             // Validation
             if (operation.Length == 0)
             {
-                Console.WriteLine("You must specify an operation!");
+                Console.WriteLine($"You must specify an operation, {s_name}!");
                 return;
             }
 
@@ -201,11 +202,11 @@ Enter your choice here: ";
                         Console.WriteLine($"Invalid operation {operation}!");
                         return;
                 }
-                Console.WriteLine($"\nResult: {s_previousAnswer}\n");
+                Console.WriteLine($"\nHere is your result, {s_name}: {s_previousAnswer}\n");
             }
             catch (ArithmeticException e)
             {
-                Console.WriteLine($"Invalid operation!\nError: {e.Message}");
+                Console.WriteLine($"Invalid operation, {s_name}!\nError: {e.Message}");
             }
         }
 
