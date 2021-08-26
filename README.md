@@ -5,3 +5,4 @@ Projects from my Intro to Video Game Design class.
 ### Projects in chronological order
 
 1. [`Hello World`](./HelloWorld/)
+2. [`CsConsoleProgram`](./CsConsoleProgram/)
