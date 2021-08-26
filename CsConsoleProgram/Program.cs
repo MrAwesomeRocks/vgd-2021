@@ -25,6 +25,7 @@ Enter your choice here: ";
         // Private vars
         private static double s_previousAnswer;
         private static double s_savedAnswer;
+        private static Random rand = new();
 
         static void Main(string[] args)
         {
@@ -210,7 +211,7 @@ Enter your choice here: ";
 
         private static double s_promptForNumber(string name)
         {
-            Console.Write($"Please enter the {name} number or ans for the saved answer, {s_savedAnswer}: ");
+            Console.Write($"Please enter the {name} number, rand for a random int, or nothing for the saved answer, {s_savedAnswer}: ");
             string raw = Console.ReadLine();
 
             double result;
@@ -220,9 +221,14 @@ Enter your choice here: ";
             }
             catch (FormatException)
             {
-                if (raw.Length == 0 || (raw.Length == 3 && raw.Substring(0, 3) == "ans"))
+                if (raw.Length == 0)
                 {
                     result = s_savedAnswer;
+                }
+                else if (raw.Length == 4 && raw.Substring(0, 4) == "rand")
+                {
+                    // Random double in (-1000, 1000)
+                    result = rand.NextDouble() * 2000 - 1000;
                 }
                 else
                 {
