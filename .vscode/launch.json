@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/HelloWorld/bin/Debug/net5.0/HelloWorld.dll",
+            "program": "${workspaceFolder}/CSharp/HelloWorld/bin/Debug/net5.0/HelloWorld.dll",
             "args": [],
             "cwd": "${workspaceFolder}/HelloWorld",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -26,7 +26,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/CsConsoleProgram/bin/Debug/net5.0/CsConsoleProgram.dll",
+            "program": "${workspaceFolder}/CSharp/CsConsoleProgram/bin/Debug/net5.0/CsConsoleProgram.dll",
             "args": [],
             "cwd": "${workspaceFolder}/CsConsoleProgram",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
