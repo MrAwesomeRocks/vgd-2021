@@ -1,6 +1,11 @@
 {
   "RoslynExtensionsOptions": {
     "EnableAnalyzersSupport": true,
-    "LocationPaths": ["../../NuGet/microsoft.unity.analyzers.1.11.1/analyzers/dotnet/cs"]
+    "LocationPaths": [
+      "../../NuGet/microsoft.unity.analyzers.1.11.1/analyzers/dotnet/cs"
+    ]
+  },
+  "FormattingOptions": {
+    "enableEditorConfigSupport": true
   }
 }
