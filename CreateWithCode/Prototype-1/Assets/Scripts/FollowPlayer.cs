@@ -5,7 +5,9 @@ using UnityEngine;
 public class FollowPlayer : MonoBehaviour
 {
     public GameObject player;
-    private Vector3 offset = new Vector3(0, 6.25f, -7);
+    public bool thirdPersonCamera = true;
+    private Vector3 offset1st = new Vector3(0, 4.5f, 0);
+    private Vector3 offset3rd = new Vector3(0, 6.25f, -7);
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +27,14 @@ public class FollowPlayer : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        transform.position = player.transform.position + offset;
+        if (thirdPersonCamera)
+        {
+            transform.position = player.transform.position + offset3rd;
+        }
+        else
+        {
+            transform.position = player.transform.position + offset1st;
+            transform.rotation = player.transform.rotation;
+        }
     }
 }
