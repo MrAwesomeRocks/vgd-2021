@@ -8,23 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4985228826098048105}
+  - component: {fileID: 743534360664070759}
   - component: {fileID: 4985228826098909563}
   - component: {fileID: 4985228826099954665}
   - component: {fileID: 4985228826324394140}
   - component: {fileID: 2035035793}
   - component: {fileID: 2090654608267259937}
-  - component: {fileID: 7963267481230607984}
   - component: {fileID: 923151681889099399}
   m_Layer: 0
   m_Name: Food_Steak_01
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4985228826098048105
-Transform:
+--- !u!224 &743534360664070759
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -37,6 +36,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!33 &4985228826098909563
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -124,18 +128,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.46739918, y: 0.08559368, z: 0.6615112}
   m_Center: {x: 0, y: 0.04279684, z: 0}
---- !u!114 &7963267481230607984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4985228826097981861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 368e94b5f0e281c4c816b266362a3bfb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &923151681889099399
 Rigidbody:
   m_ObjectHideFlags: 0

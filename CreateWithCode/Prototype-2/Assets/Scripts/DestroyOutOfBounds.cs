@@ -6,11 +6,13 @@ public class DestroyOutOfBounds : MonoBehaviour
 {
     private const float topBound = 30.0f;
     private const float lowerBound = -10.0f;
+    private const float xRange = 40.0f;
+    private Scorekeeper scorekeeper;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        scorekeeper = GameObject.Find("Scorekeeper").GetComponent<Scorekeeper>();
     }
 
     // Update is called once per frame
@@ -21,9 +23,17 @@ public class DestroyOutOfBounds : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        else if (transform.position.z < lowerBound) {
+        else if (transform.position.z < lowerBound)
+        {
             // Also notify for game over
-            Debug.Log("Game Over!");
+            scorekeeper.Lives--;
+            Destroy(gameObject);
+        }
+
+        if (Mathf.Abs(transform.position.x) > xRange)
+        {
+            // Animal walked off the screen
+            scorekeeper.Lives--;
             Destroy(gameObject);
         }
     }

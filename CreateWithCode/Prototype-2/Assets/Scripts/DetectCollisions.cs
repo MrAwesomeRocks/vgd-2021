@@ -4,10 +4,20 @@ using UnityEngine;
 
 public class DetectCollisions : MonoBehaviour
 {
+    private Scorekeeper scorekeeper;
     // Start is called before the first frame update
     void Start()
     {
 
+    }
+
+    /// <summary>
+    /// Awake is called when the script instance is being loaded.
+    /// </summary>
+    void Awake()
+    {
+        // https://answers.unity.com/questions/976620/ontriggerenter-called-before-start.html
+        scorekeeper = GameObject.Find("Scorekeeper").GetComponent<Scorekeeper>();
     }
 
     // Update is called once per frame
@@ -22,7 +32,16 @@ public class DetectCollisions : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
-        Destroy(other.gameObject);
+        if (other.CompareTag("Player"))
+        {
+            scorekeeper.Lives--;
+            Destroy(gameObject);
+        }
+        else if (other.CompareTag("Projectile"))
+        {
+            // Pizza collision detection
+            Destroy(other.gameObject);
+            GetComponent<HungerManager>().FeedAnimal();
+        }
     }
 }
