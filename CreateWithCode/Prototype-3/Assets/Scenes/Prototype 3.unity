@@ -622,7 +622,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f7bec3a8f93d24d8d2515b1dcc1b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstaclePrefab: {fileID: 7699484490195147210, guid: b21c197851dd31f48b438a05f071b0a0, type: 3}
+  obstaclePrefabs:
+  - {fileID: 7699484490195147210, guid: b21c197851dd31f48b438a05f071b0a0, type: 3}
+  - {fileID: 2644663991540582789, guid: 26da33c39f1262a4098d5db49f00fc9b, type: 3}
+  - {fileID: 8547229610467984356, guid: 7c160e5834380514591717c1b2bac675, type: 3}
+  - {fileID: 3759096312927538763, guid: 570f3945c23b0624a87830ed2efe2e55, type: 3}
+  - {fileID: 6755789962159168799, guid: 895e8322b34a3d24f8fd86779a1a2ae7, type: 3}
+  startDelay: 3
+  repeatRate: 2
 --- !u!4 &950015441
 Transform:
   m_ObjectHideFlags: 0
@@ -658,7 +665,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400066, guid: 4a7c3ad7168bb834b87a91e3f94ad3d6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 400066, guid: 4a7c3ad7168bb834b87a91e3f94ad3d6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -873,8 +880,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpForce: 840
   gravityModifier: 3
-  isOnGround: 1
   gameOver: 0
+  jumpCount: 0
+  speedUp: 0
+  dashKey: 122
+  jumpKey: 32
+  score: 0
+  scoreDelay: 0.1
+  scorePrintDelay: 1
+  walkInSpeed: 3
+  startTransition: 0.842
+  starting: 1
   explosionParticle: {fileID: 819907266}
   dirtParticle: {fileID: 62478226}
   jumpSound: {fileID: 8300000, guid: 113ee460fadc340e4957a7404a9fbb27, type: 3}

@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class MoveLeft : MonoBehaviour
 {
-    private const float speed = 40;
+    private const float slowSpeed = 40;
+    private const float fastSpeed = 60;
+
+    private float speed;
     private PlayerController playerControllerScript;
     private const float leftBound = -15.0f;
     private bool isObstacle;
@@ -12,6 +15,8 @@ public class MoveLeft : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        speed = slowSpeed;
+
         playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         isObstacle = gameObject.CompareTag("Obstacle");
     }
@@ -19,14 +24,26 @@ public class MoveLeft : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!playerControllerScript.gameOver)
+        if (!playerControllerScript.starting)
         {
-            transform.Translate(speed * Time.deltaTime * Vector3.left);
-        }
+            if (!playerControllerScript.gameOver)
+            {
+                transform.Translate(speed * Time.deltaTime * Vector3.left);
+            }
 
-        if (isObstacle && transform.position.x < leftBound)
-        {
-            Destroy(gameObject);
+            if (playerControllerScript.speedUp)
+            {
+                speed = fastSpeed;
+            }
+            else
+            {
+                speed = slowSpeed;
+            }
+
+            if (isObstacle && transform.position.x < leftBound)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
