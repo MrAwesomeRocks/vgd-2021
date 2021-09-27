@@ -75,6 +75,7 @@ public class PlayerController : MonoBehaviour
             {
                 // Start transition to running
                 playerAnim.SetFloat("Speed_f", 1.0f);
+                dirtParticle.Play();
             }
 
             // Set our position as a fraction of the distance between start and end positions
