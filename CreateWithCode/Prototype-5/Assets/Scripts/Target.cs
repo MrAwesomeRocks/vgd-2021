@@ -33,19 +33,26 @@ public class Target : MonoBehaviour
 
     }
 
-    /// OnMouseDown is called when the user has pressed the mouse button while over the GUIElement or Collider.
+    // OnMouseDown is called when the user has pressed the mouse button while over the GUIElement or Collider.
     void OnMouseDown()
     {
-        Destroy(gameObject);
-        Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
-        gameManager.UpdateScore(pointValue);
+        if (gameManager.isGameActive)
+        {
+            Destroy(gameObject);
+            Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+            gameManager.UpdateScore(pointValue);
+        }
     }
 
-    /// OnTriggerEnter is called when the Collider other enters the trigger.
-    /// <param name="other">The other Collider involved in this collision.</param>
+    // OnTriggerEnter is called when the Collider other enters the trigger.
     void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
+
+        if (!gameObject.CompareTag("Bad"))
+        {
+            gameManager.GameOver();
+        }
     }
 
     Vector3 RandomForce()
