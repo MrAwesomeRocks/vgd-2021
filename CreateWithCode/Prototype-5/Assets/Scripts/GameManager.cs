@@ -31,9 +31,13 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnTarget()
     {
+        // Only spawn objects when the game is running
         while (isGameActive)
         {
+            // Delay spawning
             yield return new WaitForSeconds(spawnRate);
+
+            // Choose a random object and spawn it
             int index = Random.Range(0, targets.Count);
             Instantiate(targets[index]);
         }
@@ -41,31 +45,41 @@ public class GameManager : MonoBehaviour
 
     public void UpdateScore(int scoreToAdd)
     {
+        // Add score
         score += scoreToAdd;
+        // Re-display
         scoreText.text = $"Score: {score}";
     }
 
     public void GameOver()
     {
+        // Turn on game-over screen
         gameOverText.gameObject.SetActive(true);
         restartButton.gameObject.SetActive(true);
+
+        // Turn off game
         isGameActive = false;
     }
 
     public void RestartGame()
     {
+        // Reload the scene to restart the game
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void StartGame(int difficulty)
     {
+        // Initialize variables
         isGameActive = true;
         score = 0;
+        // Set spawn rate based on difficulty
         spawnRate /= difficulty;
 
+        // Start spawning and display initial score
         StartCoroutine(SpawnTarget());
         UpdateScore(0);
 
+        // Turn off the title screen
         titleScreen.gameObject.SetActive(false);
     }
 }

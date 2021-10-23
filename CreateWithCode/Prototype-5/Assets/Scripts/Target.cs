@@ -18,12 +18,16 @@ public class Target : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Get components
         targetRb = GetComponent<Rigidbody>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
 
+        // Since this object is spawned in another script,
+        // add a random force and torque immediately
         targetRb.AddForce(RandomForce(), ForceMode.Impulse);
         targetRb.AddTorque(RandomTorque(), RandomTorque(), RandomTorque(), ForceMode.Impulse);
 
+        // Pick a random spawn position
         transform.position = RandomSpawnPos();
     }
 
@@ -36,8 +40,11 @@ public class Target : MonoBehaviour
     // OnMouseDown is called when the user has pressed the mouse button while over the GUIElement or Collider.
     void OnMouseDown()
     {
+        // Once the game is over, don't alow players to click objects anymore
         if (gameManager.isGameActive)
         {
+            // If the object is clicked, destroy it, create a particle effect,
+            // and increment the score
             Destroy(gameObject);
             Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             gameManager.UpdateScore(pointValue);
@@ -47,24 +54,29 @@ public class Target : MonoBehaviour
     // OnTriggerEnter is called when the Collider other enters the trigger.
     void OnTriggerEnter(Collider other)
     {
+        // The object has fallen off the screen
         Destroy(gameObject);
 
         if (!gameObject.CompareTag("Bad"))
         {
+            // If the object is not a bad one, the game is over
             gameManager.GameOver();
         }
     }
 
+    // Get a random force
     Vector3 RandomForce()
     {
         return Random.Range(minSpeed, maxSpeed) * Vector3.up;
     }
 
+    // Get a random torque
     float RandomTorque()
     {
         return Random.Range(-maxTorque, maxTorque);
     }
 
+    // Get a random spawn position
     Vector3 RandomSpawnPos()
     {
         return new Vector3(Random.Range(-xRange, xRange), ySpawnPos);
