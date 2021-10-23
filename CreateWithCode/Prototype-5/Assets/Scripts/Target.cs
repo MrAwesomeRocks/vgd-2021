@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
+    public ParticleSystem explosionParticle;
+    public int pointValue;
+
     private Rigidbody targetRb;
+    private GameManager gameManager;
     private float minSpeed = 12;
     private float maxSpeed = 16;
     private float maxTorque = 10;
@@ -15,6 +19,7 @@ public class Target : MonoBehaviour
     void Start()
     {
         targetRb = GetComponent<Rigidbody>();
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
 
         targetRb.AddForce(RandomForce(), ForceMode.Impulse);
         targetRb.AddTorque(RandomTorque(), RandomTorque(), RandomTorque(), ForceMode.Impulse);
@@ -28,18 +33,15 @@ public class Target : MonoBehaviour
 
     }
 
-    /// <summary>
-    /// OnMouseDown is called when the user has pressed the mouse button while
-    /// over the GUIElement or Collider.
-    /// </summary>
+    /// OnMouseDown is called when the user has pressed the mouse button while over the GUIElement or Collider.
     void OnMouseDown()
     {
         Destroy(gameObject);
+        Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+        gameManager.UpdateScore(pointValue);
     }
 
-    /// <summary>
     /// OnTriggerEnter is called when the Collider other enters the trigger.
-    /// </summary>
     /// <param name="other">The other Collider involved in this collision.</param>
     void OnTriggerEnter(Collider other)
     {
