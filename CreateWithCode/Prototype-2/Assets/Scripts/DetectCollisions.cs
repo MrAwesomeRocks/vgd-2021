@@ -40,7 +40,11 @@ public class DetectCollisions : MonoBehaviour
         else if (other.CompareTag("Projectile"))
         {
             // Pizza collision detection
-            Destroy(other.gameObject);
+            // Instead of destroying the projectile when it collides with an animal
+            //Destroy(other.gameObject);
+
+            // Just deactivate the food and feed the animal
+            other.gameObject.SetActive(false);
             GetComponent<HungerManager>().FeedAnimal();
         }
     }

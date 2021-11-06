@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveTraffic : MonoBehaviour
 {
     // random speed with Unity's Random
-    private float speed;
+    [SerializeField] private float speed;
 
     // Start is called before the first frame update
     void Start()

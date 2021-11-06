@@ -21,7 +21,11 @@ public class DestroyOutOfBounds : MonoBehaviour
         // If an object goes past the player, remove the object
         if (transform.position.z > topBound)
         {
-            Destroy(gameObject);
+            // Instead of destroying the projectile when it leaves the screen
+            //Destroy(gameObject);
+
+            // Just deactivate it
+            gameObject.SetActive(false);
         }
         else if (transform.position.z < lowerBound)
         {

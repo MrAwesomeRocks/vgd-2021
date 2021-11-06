@@ -11,14 +11,15 @@ public class PlayerController : MonoBehaviour
 
     // control var
     public int vehicleNumber;
-    private const float speed = 20.0f;
-    private const float turnSpeed = 55.0f;
-    private float horizontalInput = 0.0f;
-    private float forwardInput = 0.0f;
+    [SerializeField] private float speed = 20.0f;
+    [SerializeField] private float turnSpeed = 55.0f;
+    [SerializeField] private float horizontalInput = 0.0f;
+    [SerializeField] private float forwardInput = 0.0f;
 
     // Call this function to disable FPS camera,
     // and enable third person camera.
-    private void ToggleCamera() {
+    private void ToggleCamera()
+    {
         firstPersonCamera.enabled = !firstPersonCamera.enabled;
         thirdPersonCamera.enabled = !thirdPersonCamera.enabled;
     }
@@ -30,8 +31,10 @@ public class PlayerController : MonoBehaviour
         thirdPersonCamera.enabled = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void FixedUpdate()
     {
         // get inputs
         horizontalInput = Input.GetAxis($"Horizontal{vehicleNumber}");
@@ -43,7 +46,8 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up, horizontalInput * turnSpeed * Time.deltaTime);
 
         // Cameras
-        if (Input.GetKeyDown(cameraSwitchKey)) {
+        if (Input.GetKeyDown(cameraSwitchKey))
+        {
             ToggleCamera();
         }
     }
