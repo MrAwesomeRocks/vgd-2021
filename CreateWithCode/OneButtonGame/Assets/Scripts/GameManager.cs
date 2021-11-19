@@ -25,8 +25,17 @@ public class GameManager : MonoBehaviour
     public class MilestoneInfo
     {
         public float zPos;
-        public bool passed;
-        public UnityEvent milestoneEvent;
+        bool passed = false;
+        [SerializeField] UnityEvent milestoneEvent;
+
+        public void Reach()
+        {
+            if (!passed)
+            {
+                passed = true;
+                milestoneEvent.Invoke();
+            }
+        }
     }
     public List<MilestoneInfo> drivingMilestones;
 
