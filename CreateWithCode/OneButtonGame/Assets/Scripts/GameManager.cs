@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
@@ -19,6 +20,15 @@ public class GameManager : MonoBehaviour
     public float motorAmount;
     public float targetRotationY;
 
+    // Milestones
+    [System.Serializable]
+    public class MilestoneInfo
+    {
+        public float zPos;
+        public bool passed;
+        public UnityEvent milestoneEvent;
+    }
+    public List<MilestoneInfo> drivingMilestones;
 
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
@@ -30,6 +40,11 @@ public class GameManager : MonoBehaviour
             // Button was held
             HandleMainButtonHeld();
         }
+    }
+
+    public void OnCourseStart(float drivingRotation)
+    {
+        targetRotationY = drivingRotation;
     }
 
     void HandleMainButtonTapped()

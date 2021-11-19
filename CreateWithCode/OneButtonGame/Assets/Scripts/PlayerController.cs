@@ -42,6 +42,32 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void Update()
+    {
+        float zPos = transform.position.z;
+        int lastMilestoneIndex = gameManager.drivingMilestones.Count - 1;
+        for (int i = 0; i < gameManager.drivingMilestones.Count - 1; i++)
+        {
+            if (!gameManager.drivingMilestones[i].passed
+                && gameManager.drivingMilestones[i].zPos < zPos
+                && gameManager.drivingMilestones[i + 1].zPos > zPos)
+            {
+                gameManager.drivingMilestones[i].milestoneEvent.Invoke();
+                gameManager.drivingMilestones[i].passed = true;
+                break;
+            }
+        }
+        if (!gameManager.drivingMilestones[lastMilestoneIndex].passed
+            && gameManager.drivingMilestones[lastMilestoneIndex].zPos < zPos)
+        {
+            gameManager.drivingMilestones[lastMilestoneIndex].milestoneEvent.Invoke();
+            gameManager.drivingMilestones[lastMilestoneIndex].passed = true;
+        }
+    }
+
+    /// <summary>
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
     /// </summary>
     public void FixedUpdate()
