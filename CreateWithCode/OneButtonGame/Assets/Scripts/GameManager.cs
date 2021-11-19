@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI buttonText;
     [SerializeField] float minTimeForHeldButton;
 
+    // Player control
+    public float motorAmount;
+    public float targetRotationY;
+
+
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
@@ -29,21 +34,18 @@ public class GameManager : MonoBehaviour
 
     void HandleMainButtonTapped()
     {
-        if (isOnGround)
-        {
-            // Drive
-        }
-        else
+        if (!isOnGround)
         {
             // Do a trick
         }
+        // Driving only works with a held button
     }
 
     void HandleMainButtonHeld()
     {
         if (isOnGround)
         {
-            // Drive
+            motorAmount = 1;
         }
         else
         {
@@ -66,6 +68,7 @@ public class GameManager : MonoBehaviour
             HandleMainButtonTapped();
         }
         // Button was held, already handled
+        motorAmount = 0;
     }
 
     public void ChangeVehicleGrounded(bool grounded)

@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float motorTorque;
     [SerializeField] float steeringAngle;
     [SerializeField] float yMax;
+    [SerializeField] float maxRpm;
 
     // Axle storage
     [System.Serializable]
@@ -28,19 +29,16 @@ public class PlayerController : MonoBehaviour
     // Game manager stuff
     GameManager gameManager;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.centerOfMass = centerOfMass.transform.localPosition;
 
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     /// <summary>
@@ -51,8 +49,8 @@ public class PlayerController : MonoBehaviour
         float motor, steering;
         if (IsOnGround())
         {
-            motor = motorTorque * Input.GetAxis("Vertical");
-            steering = steeringAngle * Input.GetAxis("Horizontal");
+            motor = motorTorque * gameManager.motorAmount;
+            steering = steeringAngle * GetSteeringMultiplier();
 
             if (transform.position.y > yMax)
             {
@@ -79,8 +77,9 @@ public class PlayerController : MonoBehaviour
             }
             if (axle.powered)
             {
-                axle.leftWheel.motorTorque = motor;
-                axle.rightWheel.motorTorque = motor;
+                // https://forum.unity.com/threads/wheels-cause-undesired-acceleration.442501/#post-2863034
+                axle.leftWheel.motorTorque = axle.leftWheel.rpm < maxRpm ? motor : 0;
+                axle.rightWheel.motorTorque = axle.rightWheel.rpm < maxRpm ? motor : 0;
             }
         }
     }
@@ -95,5 +94,39 @@ public class PlayerController : MonoBehaviour
         }
 
         return groundedWheels > 1;
+    }
+
+    float GetSteeringMultiplier()
+    {
+        float adjustedYRotation = GetAdjustedYRotation();
+        float difference = adjustedYRotation - gameManager.targetRotationY;
+
+        if (difference < -1)
+        {
+            // Debug.Log($"Raw Rotation: {transform.rotation.eulerAngles.y}; Rotation: {adjustedYRotation}; Difference: {difference}; Mult: 1");
+            return 1;
+        }
+        else if (difference > 1)
+        {
+            // Debug.Log($"Raw Rotation: {transform.rotation.eulerAngles.y}; Rotation: {adjustedYRotation}; Difference: {difference}; Mult: -1");
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    float GetAdjustedYRotation()
+    {
+        float yRotation = transform.rotation.eulerAngles.y;
+        if (yRotation > 180)
+        {
+            return yRotation - 360;
+        }
+        else
+        {
+            return yRotation;
+        }
     }
 }
