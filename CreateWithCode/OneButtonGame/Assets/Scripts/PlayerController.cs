@@ -63,7 +63,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            gameManager.ChangeVehicleGrounded(false);
             motor = 0;
             steering = 0;
         }

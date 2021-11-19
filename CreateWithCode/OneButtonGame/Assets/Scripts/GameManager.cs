@@ -73,9 +73,20 @@ public class GameManager : MonoBehaviour
 
     public void ChangeVehicleGrounded(bool grounded)
     {
-        isOnGround = grounded;
+        if (grounded == isOnGround) { return; } // Only update when new value is different
 
-        buttonText.text = isOnGround ? "Accelerate!" : "Trick!";
+        if (grounded)
+        {
+            // Landed
+            buttonText.text = "Accelerate!";
+        }
+        else
+        {
+            buttonText.text = "Trick!";
+            targetRotationY *= -1;
+        }
+
+        isOnGround = grounded;
     }
 
     public void QuitGame()
