@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float steeringAngle;
     [SerializeField] float yMax;
     [SerializeField] float maxRpm;
+    [SerializeField] float trickTorque;
 
     // Axle storage
     [System.Serializable]
@@ -103,6 +104,32 @@ public class PlayerController : MonoBehaviour
                 axle.leftWheel.motorTorque = axle.leftWheel.rpm < maxRpm ? motor : 0;
                 axle.rightWheel.motorTorque = axle.rightWheel.rpm < maxRpm ? motor : 0;
             }
+        }
+    }
+
+    public enum TrickTypes
+    {
+        One80,
+        Three60,
+        Flip
+    }
+
+    public void DoTrick(TrickTypes type)
+    {
+        switch (type)
+        {
+            case TrickTypes.One80:
+                // Handled by default
+                return;
+            case TrickTypes.Three60:
+                rb.AddRelativeTorque(0, Mathf.Sign(GetSteeringMultiplier()) * trickTorque, 0, ForceMode.Impulse);
+                return;
+            case TrickTypes.Flip:
+                rb.AddRelativeTorque(trickTorque, 0, 0, ForceMode.Impulse);
+                return;
+            default:
+                // Should never happen
+                return;
         }
     }
 

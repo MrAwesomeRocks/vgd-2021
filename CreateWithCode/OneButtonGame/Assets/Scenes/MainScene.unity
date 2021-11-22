@@ -369,10 +369,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bae6fb2664442f4b911734c6de37c15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonTapped: 0
+  buttonHeld: 0
   buttonText: {fileID: 2058228010}
   minTimeForHeldButton: 0.15
+  timeToResetButtonBookeeping: 0.5
   motorAmount: 0
   targetRotationY: 0
+  player: {fileID: 1890162380}
   drivingMilestones:
   - zPos: -85
     milestoneEvent:
@@ -509,7 +513,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-32068
+  m_Name: pb_Mesh17120
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1580,7 +1584,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-39280
+  m_Name: pb_Mesh17092
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -26283,6 +26287,7 @@ MonoBehaviour:
   steeringAngle: 20
   yMax: 10
   maxRpm: 1000
+  trickTorque: 5000
   axleInfos:
   - leftWheel: {fileID: 1383751228}
     rightWheel: {fileID: 6801876}

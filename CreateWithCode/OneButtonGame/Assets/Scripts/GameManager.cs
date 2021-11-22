@@ -11,14 +11,20 @@ public class GameManager : MonoBehaviour
     bool isOnGround;
     float buttonFirstPressedTime;
     bool buttonDown;
+    float buttonLastTapTime;
+    [SerializeField] bool buttonTapped;
+    float buttonLastHeldTime;
+    [SerializeField] bool buttonHeld;
 
     // Button control
     [SerializeField] TextMeshProUGUI buttonText;
     [SerializeField] float minTimeForHeldButton;
+    [SerializeField] float timeToResetButtonBookeeping;
 
     // Player control
     public float motorAmount;
     public float targetRotationY;
+    [SerializeField] PlayerController player;
 
     // Milestones
     [System.Serializable]
@@ -49,6 +55,16 @@ public class GameManager : MonoBehaviour
             // Button was held
             HandleMainButtonHeld();
         }
+
+        // Reset held and tapped times
+        if (Time.time - buttonLastHeldTime > timeToResetButtonBookeeping)
+        {
+            buttonHeld = false;
+        }
+        if (Time.time - buttonLastTapTime > timeToResetButtonBookeeping)
+        {
+            buttonTapped = false;
+        }
     }
 
     public void OnCourseStart(float drivingRotation)
@@ -58,11 +74,24 @@ public class GameManager : MonoBehaviour
 
     void HandleMainButtonTapped()
     {
-        if (!isOnGround)
-        {
-            // Do a trick
-        }
         // Driving only works with a held button
+        if (isOnGround) return;
+
+        buttonLastTapTime = Time.time;
+        buttonTapped = true;
+
+        if (buttonHeld)
+        {
+            // Player does a 360
+            Debug.Log("Player did a 360!");
+            player.DoTrick(PlayerController.TrickTypes.Three60);
+        }
+        else
+        {
+            // Player does a flip
+            Debug.Log("Player did a flip!");
+            player.DoTrick(PlayerController.TrickTypes.Flip);
+        }
     }
 
     void HandleMainButtonHeld()
@@ -73,7 +102,8 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // Do a trick
+            buttonLastHeldTime = Time.time;
+            buttonHeld = true;
         }
     }
 
@@ -97,7 +127,7 @@ public class GameManager : MonoBehaviour
 
     public void ChangeVehicleGrounded(bool grounded)
     {
-        if (grounded == isOnGround) { return; } // Only update when new value is different
+        if (grounded == isOnGround) return;  // Only update when new value is different
 
         if (grounded)
         {
