@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 
     // Game manager stuff
     GameManager gameManager;
+    Scorekeeper scorekeeper;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
         rb.centerOfMass = centerOfMass.transform.localPosition;
 
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        scorekeeper = GameObject.Find("Game Manager").GetComponent<Scorekeeper>();
     }
 
     /// <summary>
@@ -116,6 +118,7 @@ public class PlayerController : MonoBehaviour
 
     public void DoTrick(TrickTypes type)
     {
+        scorekeeper.AddScoreForTrick(type);
         switch (type)
         {
             case TrickTypes.One80:
