@@ -15,14 +15,16 @@ public class Scorekeeper : MonoBehaviour
         protected set
         {
             score = value;
-            scoreText.text = $"Score: {score}/{requiredScore}";
+            UpdateScoreDisplay();
         }
     }
 
+    // Bookeeping
+
     // Control variables
+    public int RequiredScore { get; set; }
     [SerializeField] int scoreIncrement;
     [SerializeField] float scorePause;
-    [SerializeField] int requiredScore;
     [SerializeField] List<int> scorePerTrick;
     [SerializeField] bool playerStartedCourse;
     [SerializeField] float minSpeed;
@@ -49,6 +51,7 @@ public class Scorekeeper : MonoBehaviour
     {
         while (true)
         {
+            Debug.Log(RequiredScore);
             if (gameManager.IsRunning && playerStartedCourse && Mathf.Abs(player.velocity.magnitude) > minSpeed)
             {
                 Score += scoreIncrement;
@@ -69,7 +72,7 @@ public class Scorekeeper : MonoBehaviour
 
     public void CourseFinished()
     {
-        if (Score > requiredScore)
+        if (Score > RequiredScore)
         {
             gameManager.GameWon();
         }
@@ -77,5 +80,10 @@ public class Scorekeeper : MonoBehaviour
         {
             gameManager.GameLost();
         }
+    }
+
+    public void UpdateScoreDisplay()
+    {
+        scoreText.text = $"Score: {score}/{RequiredScore}";
     }
 }

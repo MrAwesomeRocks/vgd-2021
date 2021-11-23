@@ -30,8 +30,8 @@ public class ButtonPositionManager : MonoBehaviour
 
     public void OnButtonLocationChange(TMP_Dropdown change)
     {
-        Debug.Log("Dropdown changed!");
-        
+        Debug.Log("Button position dropdown changed!");
+
         rightButton.SetActive(false);
         leftButton.SetActive(false);
 
