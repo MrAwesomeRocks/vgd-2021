@@ -1,146 +1,74 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    // Bookeeping
-    bool isOnGround;
-    float buttonFirstPressedTime;
-    bool buttonDown;
-    float buttonLastTapTime;
-    [SerializeField] bool buttonTapped;
-    float buttonLastHeldTime;
-    [SerializeField] bool buttonHeld;
-
-    // Button control
-    [SerializeField] TextMeshProUGUI buttonText;
-    [SerializeField] float minTimeForHeldButton;
-    [SerializeField] float timeToResetButtonBookeeping;
-
-    // Player control
-    public float motorAmount;
-    public float targetRotationY;
-    [SerializeField] PlayerController player;
-
-    // Milestones
-    [System.Serializable]
-    public class MilestoneInfo
+    // Game Management
+    [SerializeField] bool isRunning;
+    public bool IsRunning
     {
-        public float zPos;
-        bool passed = false;
-        [SerializeField] UnityEvent milestoneEvent;
-
-        public void Reach()
-        {
-            if (!passed)
-            {
-                passed = true;
-                milestoneEvent.Invoke();
-            }
-        }
+        get { return isRunning; }
+        protected set { isRunning = value; }
     }
-    public List<MilestoneInfo> drivingMilestones;
+
+    // UI elements
+    [SerializeField] GameObject titleScreen;
+    [SerializeField] GameObject gameUIScreen;
+    [SerializeField] GameObject settingsScreen;
+    [SerializeField] GameObject creditsScreen;
+    [SerializeField] GameObject instructionsScreen;
+    [SerializeField] GameObject backButton;
 
     /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
     /// </summary>
-    void Update()
+    void Start()
     {
-        if (buttonDown && Time.time - buttonFirstPressedTime > minTimeForHeldButton)
-        {
-            // Button was held
-            HandleMainButtonHeld();
-        }
+        IsRunning = false;
 
-        // Reset held and tapped times
-        if (Time.time - buttonLastHeldTime > timeToResetButtonBookeeping)
-        {
-            buttonHeld = false;
-        }
-        if (Time.time - buttonLastTapTime > timeToResetButtonBookeeping)
-        {
-            buttonTapped = false;
-        }
+        // Show the title screen
+        ShowTitleScreen();
     }
 
-    public void OnCourseStart(float drivingRotation)
+    #region Menu Functions
+    public void StartGame()
     {
-        targetRotationY = drivingRotation;
+        IsRunning = true;
+
+        // Show the game UI
+        HideAllUI();
+        gameUIScreen.SetActive(true);
     }
 
-    void HandleMainButtonTapped()
+    public void ShowSettings()
     {
-        // Driving only works with a held button
-        if (isOnGround) return;
-
-        buttonLastTapTime = Time.time;
-        buttonTapped = true;
-
-        if (buttonHeld)
-        {
-            // Player does a 360
-            Debug.Log("Player did a 360!");
-            player.DoTrick(PlayerController.TrickTypes.Three60);
-        }
-        else
-        {
-            // Player does a flip
-            Debug.Log("Player did a flip!");
-            player.DoTrick(PlayerController.TrickTypes.Flip);
-        }
+        HideAllUI();
+        settingsScreen.SetActive(true);
+        backButton.SetActive(true);
     }
 
-    void HandleMainButtonHeld()
+    public void ShowInstructions()
     {
-        if (isOnGround)
-        {
-            motorAmount = 1;
-        }
-        else
-        {
-            buttonLastHeldTime = Time.time;
-            buttonHeld = true;
-        }
+        HideAllUI();
+        instructionsScreen.SetActive(true);
+        backButton.SetActive(true);
     }
 
-    public void OnMainButtonDown()
+    public void ShowCredits()
     {
-        buttonFirstPressedTime = Time.time;
-        buttonDown = true;
+        HideAllUI();
+        creditsScreen.SetActive(true);
+        backButton.SetActive(true);
     }
 
-    public void OnMainButtonUp()
+    public void ShowTitleScreen()
     {
-        buttonDown = false;
-        if (Time.time - buttonFirstPressedTime < minTimeForHeldButton)
-        {
-            // Button was tapped
-            HandleMainButtonTapped();
-        }
-        // Button was held, already handled
-        motorAmount = 0;
-    }
-
-    public void ChangeVehicleGrounded(bool grounded)
-    {
-        if (grounded == isOnGround) return;  // Only update when new value is different
-
-        if (grounded)
-        {
-            // Landed
-            buttonText.text = "Accelerate!";
-        }
-        else
-        {
-            buttonText.text = "Trick!";
-            targetRotationY *= -1;
-        }
-
-        isOnGround = grounded;
+        HideAllUI();
+        titleScreen.SetActive(true);
     }
 
     public void QuitGame()
@@ -153,4 +81,29 @@ public class GameManager : MonoBehaviour
         Application.Quit();
 #endif
     }
+    #endregion
+
+    #region Game Events
+    public void GameWon()
+    {
+        QuitGame();
+    }
+
+    public void GameOver()
+    {
+        QuitGame();
+    }
+    #endregion
+
+    #region Menu Utilities
+    void HideAllUI()
+    {
+        titleScreen.SetActive(false);
+        gameUIScreen.SetActive(false);
+        settingsScreen.SetActive(false);
+        creditsScreen.SetActive(false);
+        instructionsScreen.SetActive(false);
+        backButton.SetActive(false);
+    }
+    #endregion
 }

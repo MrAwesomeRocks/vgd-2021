@@ -21,10 +21,12 @@ public class FallDetector : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Ground"))
+        if (gameManager.IsRunning)
         {
-            // TODO: Game over
-            gameManager.QuitGame();
+            if (other.gameObject.CompareTag("Ground"))
+            {
+                gameManager.GameOver();
+            }
         }
     }
 }

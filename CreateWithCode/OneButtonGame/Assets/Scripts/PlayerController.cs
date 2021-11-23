@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 
     // Game manager stuff
     GameManager gameManager;
+    ButtonManager buttonManager;
     Scorekeeper scorekeeper;
 
     /// <summary>
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour
         rb.centerOfMass = centerOfMass.transform.localPosition;
 
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        buttonManager = GameObject.Find("Game Manager").GetComponent<ButtonManager>();
         scorekeeper = GameObject.Find("Game Manager").GetComponent<Scorekeeper>();
     }
 
@@ -49,21 +51,24 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Update()
     {
-        float zPos = transform.position.z;
-        for (int i = 0; i < gameManager.drivingMilestones.Count - 1; i++)
+        if (gameManager.IsRunning)
         {
-            if (gameManager.drivingMilestones[i].zPos < zPos
-                && gameManager.drivingMilestones[i + 1].zPos > zPos)
+            float zPos = transform.position.z;
+            for (int i = 0; i < buttonManager.drivingMilestones.Count - 1; i++)
             {
-                gameManager.drivingMilestones[i].Reach();
-                break;
+                if (buttonManager.drivingMilestones[i].zPos < zPos
+                    && buttonManager.drivingMilestones[i + 1].zPos > zPos)
+                {
+                    buttonManager.drivingMilestones[i].Reach();
+                    break;
+                }
             }
-        }
 
-        int lastMilestoneIndex = gameManager.drivingMilestones.Count - 1;
-        if (gameManager.drivingMilestones[lastMilestoneIndex].zPos < zPos)
-        {
-            gameManager.drivingMilestones[lastMilestoneIndex].Reach();
+            int lastMilestoneIndex = buttonManager.drivingMilestones.Count - 1;
+            if (buttonManager.drivingMilestones[lastMilestoneIndex].zPos < zPos)
+            {
+                buttonManager.drivingMilestones[lastMilestoneIndex].Reach();
+            }
         }
     }
 
@@ -72,39 +77,42 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void FixedUpdate()
     {
-        float motor, steering;
-        if (IsOnGround())
+        if (gameManager.IsRunning)
         {
-            motor = motorTorque * gameManager.motorAmount;
-            steering = steeringAngle * GetSteeringMultiplier();
-
-            if (transform.position.y > yMax)
+            float motor, steering;
+            if (IsOnGround())
             {
-                gameManager.ChangeVehicleGrounded(false);
+                motor = motorTorque * buttonManager.motorAmount;
+                steering = steeringAngle * GetSteeringMultiplier();
+
+                if (transform.position.y > yMax)
+                {
+                    buttonManager.ChangeVehicleGrounded(false);
+                }
+                else
+                {
+                    buttonManager.ChangeVehicleGrounded(true);
+                }
             }
             else
             {
-                gameManager.ChangeVehicleGrounded(true);
+                motor = 0;
+                steering = 0;
             }
-        }
-        else
-        {
-            motor = 0;
-            steering = 0;
-        }
 
-        foreach (AxleInfo axle in axleInfos)
-        {
-            if (axle.steerable)
+            foreach (AxleInfo axle in axleInfos)
             {
-                axle.leftWheel.steerAngle = steering;
-                axle.rightWheel.steerAngle = steering;
-            }
-            if (axle.powered)
-            {
-                // https://forum.unity.com/threads/wheels-cause-undesired-acceleration.442501/#post-2863034
-                axle.leftWheel.motorTorque = axle.leftWheel.rpm < maxRpm ? motor : 0;
-                axle.rightWheel.motorTorque = axle.rightWheel.rpm < maxRpm ? motor : 0;
+                if (axle.steerable)
+                {
+                    axle.leftWheel.steerAngle = steering;
+                    axle.rightWheel.steerAngle = steering;
+                }
+                if (axle.powered)
+                {
+                    // https://forum.unity.com/threads/wheels-cause-undesired-acceleration.442501/#post-2863034
+                    axle.leftWheel.motorTorque = axle.leftWheel.rpm < maxRpm ? motor : 0;
+                    axle.rightWheel.motorTorque = axle.rightWheel.rpm < maxRpm ? motor : 0;
+                }
             }
         }
     }
@@ -151,7 +159,7 @@ public class PlayerController : MonoBehaviour
     float GetSteeringMultiplier()
     {
         float adjustedYRotation = GetAdjustedYRotation();
-        float difference = adjustedYRotation - gameManager.targetRotationY;
+        float difference = adjustedYRotation - buttonManager.targetRotationY;
 
         if (difference < -1)
         {
