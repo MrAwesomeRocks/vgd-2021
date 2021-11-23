@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject creditsScreen;
     [SerializeField] GameObject instructionsScreen;
     [SerializeField] GameObject backButton;
+    [SerializeField] GameObject player;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
         // Show the game UI
         HideAllUI();
         gameUIScreen.SetActive(true);
+        player.SetActive(true);
     }
 
     public void ShowSettings()
@@ -104,6 +106,7 @@ public class GameManager : MonoBehaviour
         creditsScreen.SetActive(false);
         instructionsScreen.SetActive(false);
         backButton.SetActive(false);
+        player.SetActive(false);
     }
     #endregion
 }
