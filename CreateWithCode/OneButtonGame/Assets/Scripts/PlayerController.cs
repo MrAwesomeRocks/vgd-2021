@@ -134,9 +134,11 @@ public class PlayerController : MonoBehaviour
                 return;
             case TrickTypes.Three60:
                 rb.AddRelativeTorque(0, Mathf.Sign(GetSteeringMultiplier()) * trickTorque, 0, ForceMode.Impulse);
+                gameManager.PlayTrickSound(1);
                 return;
             case TrickTypes.Flip:
                 rb.AddRelativeTorque(trickTorque, 0, 0, ForceMode.Impulse);
+                gameManager.PlayTrickSound(2);
                 return;
             default:
                 // Should never happen

@@ -26,6 +26,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject backButton;
     [SerializeField] GameObject player;
 
+    // Sounds
+    [SerializeField] AudioSource cameraAudio;
+    [SerializeField] AudioSource playerAudio;
+    [SerializeField] AudioClip winSound;
+    [SerializeField] AudioClip loseSound;
+    [SerializeField] AudioClip actionSound;
+
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
@@ -33,6 +40,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         IsRunning = false;
+
+        cameraAudio.Stop();
+        playerAudio.Stop();
 
         // Show the title screen
         ShowTitleScreen();
@@ -47,6 +57,9 @@ public class GameManager : MonoBehaviour
         HideAllUI();
         gameUIScreen.SetActive(true);
         player.SetActive(true);
+
+        // Start the music!
+        cameraAudio.Play();
     }
 
     public void ShowSettings()
@@ -98,12 +111,36 @@ public class GameManager : MonoBehaviour
     {
         IsRunning = false;
         winScreen.SetActive(true);
+
+        cameraAudio.Stop();
+        playerAudio.PlayOneShot(winSound);
     }
 
     public void GameLost()
     {
         IsRunning = false;
         loseScreen.SetActive(true);
+
+        cameraAudio.Stop();
+        playerAudio.PlayOneShot(loseSound);
+    }
+
+    public void PlayTrickSound(int numTimes)
+    {
+        StartCoroutine(PlaySoundNumTimes(actionSound, numTimes));
+    }
+
+    IEnumerator PlaySoundNumTimes(AudioClip sound, int numTimes)
+    {
+        for (int i = 0; i < numTimes; i++)
+        {
+            playerAudio.PlayOneShot(sound);
+
+            while (playerAudio.isPlaying)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
     }
     #endregion
 
