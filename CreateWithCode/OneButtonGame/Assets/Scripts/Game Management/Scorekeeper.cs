@@ -25,9 +25,11 @@ public class Scorekeeper : MonoBehaviour
     [SerializeField] int requiredScore;
     [SerializeField] List<int> scorePerTrick;
     [SerializeField] bool playerStartedCourse;
+    [SerializeField] float minSpeed;
 
     // UI Elements
     [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] Rigidbody player;
 
     // Game manager
     GameManager gameManager;
@@ -47,7 +49,7 @@ public class Scorekeeper : MonoBehaviour
     {
         while (true)
         {
-            if (gameManager.IsRunning && playerStartedCourse)
+            if (gameManager.IsRunning && playerStartedCourse && Mathf.Abs(player.velocity.magnitude) > minSpeed)
             {
                 Score += scoreIncrement;
             }
@@ -63,5 +65,17 @@ public class Scorekeeper : MonoBehaviour
     public void AddScoreForTrick(PlayerController.TrickTypes trick)
     {
         Score += scorePerTrick[(int)trick];
+    }
+
+    public void CourseFinished()
+    {
+        if (Score > requiredScore)
+        {
+            gameManager.GameWon();
+        }
+        else
+        {
+            gameManager.GameLost();
+        }
     }
 }

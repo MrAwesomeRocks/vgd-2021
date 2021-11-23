@@ -25,7 +25,7 @@ public class FallDetector : MonoBehaviour
         {
             if (other.gameObject.CompareTag("Ground"))
             {
-                gameManager.GameOver();
+                gameManager.GameLost();
             }
         }
     }

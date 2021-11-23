@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -20,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject settingsScreen;
     [SerializeField] GameObject creditsScreen;
     [SerializeField] GameObject instructionsScreen;
+    [SerializeField] GameObject winScreen;
+    [SerializeField] GameObject loseScreen;
     [SerializeField] GameObject backButton;
     [SerializeField] GameObject player;
 
@@ -73,6 +76,11 @@ public class GameManager : MonoBehaviour
         titleScreen.SetActive(true);
     }
 
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     public void QuitGame()
     {
         Debug.Log("Application is exiting!");
@@ -88,12 +96,14 @@ public class GameManager : MonoBehaviour
     #region Game Events
     public void GameWon()
     {
-        QuitGame();
+        IsRunning = false;
+        winScreen.SetActive(true);
     }
 
-    public void GameOver()
+    public void GameLost()
     {
-        QuitGame();
+        IsRunning = false;
+        loseScreen.SetActive(true);
     }
     #endregion
 
@@ -106,6 +116,8 @@ public class GameManager : MonoBehaviour
         creditsScreen.SetActive(false);
         instructionsScreen.SetActive(false);
         backButton.SetActive(false);
+        winScreen.SetActive(false);
+        loseScreen.SetActive(false);
         player.SetActive(false);
     }
     #endregion
