@@ -80,7 +80,7 @@ public class ButtonManager : MonoBehaviour
         }
     }
 
-    public void OnCourseStart(float drivingRotation)
+    public void SetDrivingRotation(float drivingRotation)
     {
         targetRotationY = drivingRotation;
     }
