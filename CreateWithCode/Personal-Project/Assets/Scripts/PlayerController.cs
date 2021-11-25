@@ -2,66 +2,86 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public float sideToSideForce;
-    public float jumpForce;
-    public KeyCode jumpKey;
+    // Control vars
+    [SerializeField] float movementSpeed;
+    [SerializeField] float mouseSensitivity;
+    [SerializeField] float verticalLookRange;
+    [SerializeField] float jumpSpeed;
 
-    private Rigidbody playerRb;
-    [SerializeField] private float horizontalInput;
-    [SerializeField] private float verticalInput;
-    [SerializeField] private byte numJumps;
+    // Bookeeping
+    byte numJumps;
+    float verticalRotation;
+    [SerializeField] float verticalVelocity;
+    CharacterController characterController;
 
     // Start is called before the first frame update
     void Start()
     {
+        // Init vars
+        numJumps = 0;
+        verticalRotation = 0;
+        verticalVelocity = 0;
+
         // Get the rigidbody
-        playerRb = GetComponent<Rigidbody>();
+        characterController = GetComponent<CharacterController>();
+
+        // Hide Mouse
+        // TODO: Move to GameManager
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-        MovePlayerSideToSide();
-        MovePlayerUp();
-    }
-
-    /// <summary>
-    /// OnCollisionEnter is called when this collider/rigidbody has begun
-    /// touching another rigidbody/collider.
-    /// </summary>
-    /// <param name="other">The Collision data associated with this collision.</param>
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("Ground"))
+        //$ Ground check
+        if (characterController.isGrounded)
         {
+            // Done jumping
             numJumps = 0;
+
+            // Once the player is on the ground, they aren't moving down anymore
+            if (verticalVelocity < 0)
+            {
+                Debug.Log("Reset vertical velocity!");
+                verticalVelocity = 0;
+            }
         }
-    }
 
-    // Moves the player side to side based on arrow key input
-    void MovePlayerSideToSide()
-    {
-        // Get the input axes
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        //$ Rotation
+        // Rotate left and right
+        float leftRightRotation = Input.GetAxis("Mouse X") * mouseSensitivity;
+        transform.Rotate(0, leftRightRotation, 0);
 
-        // Move the player based on axes input
-        playerRb.AddForce(horizontalInput * sideToSideForce * Vector3.right);
-        playerRb.AddForce(verticalInput * sideToSideForce * Vector3.forward);
-    }
+        // Rotate camera up and down
+        verticalRotation -= Input.GetAxis("Mouse Y") * mouseSensitivity;
+        verticalRotation = Mathf.Clamp(verticalRotation, -verticalLookRange, verticalLookRange);
+        Camera.main.transform.localRotation = Quaternion.Euler(verticalRotation, 0, 0);
 
-    // Moves the player up based on jump input
-    void MovePlayerUp()
-    {
-        // Check if the player can jump
-        if (numJumps < 2 && Input.GetKeyDown(jumpKey))
+        //! Movement
+        //$ XZ Movement (WASD)
+        float forwardSpeed = Input.GetAxis("Vertical") * movementSpeed;
+        float sideSpeed = Input.GetAxis("Horizontal") * movementSpeed;
+
+        //$ Y Movement (Jump + Gravity)
+        // Jumping
+        if (numJumps < 2 && Input.GetButtonDown("Jump"))
         {
             numJumps++;
-
-            // Move the player
-            playerRb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+            verticalVelocity += jumpSpeed;
         }
+
+        // Gravity
+        verticalVelocity += Physics.gravity.y * Time.deltaTime;
+
+        //$ Move the player
+        // Get the speed
+        Vector3 speed = new Vector3(sideSpeed, verticalVelocity, forwardSpeed);
+        Vector3 localSpeed = transform.TransformDirection(speed);
+
+        // Move the player
+        characterController.Move(Time.deltaTime * localSpeed);
     }
 }
