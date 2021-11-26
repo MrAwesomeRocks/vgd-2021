@@ -14,6 +14,14 @@ public class GameManager : MonoBehaviour
         get { return isRunning; }
         protected set { isRunning = value; }
     }
+    [SerializeField] bool playerStartedMaze;
+    public bool PlayerStartedMaze
+    {
+        get { return playerStartedMaze; }
+        protected set {
+            Debug.Log("Player started the maze!");
+            playerStartedMaze = value; }
+    }
 
     // UI elements
     [SerializeField] GameObject titleScreen;
@@ -41,6 +49,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         IsRunning = false;
+        PlayerStartedMaze = false;
 
         cameraAudio.Stop();
         playerAudio.Stop();
@@ -181,6 +190,11 @@ public class GameManager : MonoBehaviour
         cameraAudio.Stop();
         // TODO: Sounds
         // playerAudio.PlayOneShot(loseSound);
+    }
+
+    public void MazeStarted()
+    {
+        PlayerStartedMaze = true;
     }
     #endregion
 

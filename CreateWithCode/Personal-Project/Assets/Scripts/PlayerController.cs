@@ -87,4 +87,26 @@ public class PlayerController : MonoBehaviour
             characterController.Move(Time.deltaTime * localSpeed);
         }
     }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (gameManager.IsRunning)
+        {
+            if (!gameManager.PlayerStartedMaze && hit.collider.gameObject.CompareTag("Ground"))
+            {
+                // Player started the maze
+                GameObject.Find("Start Platform").GetComponent<StartPlatformController>().OnPlayerLeave();
+                Debug.Log("Sent maze start message");
+            }
+            if (hit.collider.gameObject.name == "Finish Platform")
+            {
+                GameObject.Find("Finish Platform").GetComponent<FinishPlatfromController>().OnPlayerEnter();
+            }
+            if (hit.collider.gameObject.CompareTag("Enemy"))
+            {
+                // TODO: Fighting
+                gameManager.GameLost();
+            }
+        }
+    }
 }
