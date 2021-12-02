@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
 
     // Components
     GameManager gameManager;
+    MazeManager mazeManager;
     CharacterController characterController;
 
     // Start is called before the first frame update
@@ -31,6 +32,7 @@ public class PlayerController : MonoBehaviour
         // Get components
         characterController = GetComponent<CharacterController>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        mazeManager = GameObject.Find("Game Manager").GetComponent<MazeManager>();
     }
 
     // Update is called once per frame
@@ -95,12 +97,12 @@ public class PlayerController : MonoBehaviour
             if (!gameManager.PlayerStartedMaze && hit.collider.gameObject.CompareTag("Ground"))
             {
                 // Player started the maze
-                GameObject.Find("Start Platform").GetComponent<StartPlatformController>().OnPlayerLeave();
+                mazeManager.StartPlatform.GetComponent<StartPlatformController>().OnPlayerLeave();
                 Debug.Log("Sent maze start message");
             }
             if (hit.collider.gameObject.name == "Finish Platform")
             {
-                GameObject.Find("Finish Platform").GetComponent<FinishPlatfromController>().OnPlayerEnter();
+                mazeManager.FinishPlatform.GetComponent<FinishPlatfromController>().OnPlayerEnter();
             }
             if (hit.collider.gameObject.CompareTag("Enemy"))
             {
@@ -108,5 +110,10 @@ public class PlayerController : MonoBehaviour
                 gameManager.GameLost();
             }
         }
+    }
+
+    public void MoveToStartPosition(float x, float z)
+    {
+        transform.position = new Vector3(x, 0.5f, z);
     }
 }
