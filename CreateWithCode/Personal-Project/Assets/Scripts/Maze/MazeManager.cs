@@ -99,15 +99,27 @@ public class MazeManager : MonoBehaviour
         }
     }
 
-    public int MatrixRowToUnityZ(int row)
+    #region Matrix-Unity Converters
+    public static int MatrixRowToUnityZ(int row)
     {
         return 100 - row * 10;
     }
 
-    public int MatrixColToUnityX(int col)
+    public static int MatrixColToUnityX(int col)
     {
         return 10 * col - 100;
     }
+
+    public static int UnityZToMatrixRow(int z)
+    {
+        return (100 - z) / 10;
+    }
+
+    public static int UnityXToMatrixCol(int x)
+    {
+        return (x + 100) / 10;
+    }
+    #endregion
 
     public (int X, int Z) GetRandomSpawnPosition()
     {

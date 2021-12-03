@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 4995445547619288753}
   - component: {fileID: 4995445547619288752}
   - component: {fileID: 4995445547619288755}
+  - component: {fileID: 7618991589384932401}
   m_Layer: 0
-  m_Name: Attacker
+  m_Name: Meele Attacker
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,3 +96,16 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7618991589384932401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4995445547619288754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da2cb9fd8c5b8f74ca8e8752fd61c83d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
