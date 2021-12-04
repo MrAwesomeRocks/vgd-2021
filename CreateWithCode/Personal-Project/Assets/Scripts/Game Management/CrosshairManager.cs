@@ -14,7 +14,7 @@ public class CrosshairManager : MonoBehaviour
     /// <summary>
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
     /// </summary>
-    void FixedUpdate()
+    void Update()
     {
         // Raycast to see what the crosshair is pointing at
         // and update colors accordingly

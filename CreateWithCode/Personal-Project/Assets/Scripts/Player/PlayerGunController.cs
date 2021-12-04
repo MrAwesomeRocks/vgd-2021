@@ -23,7 +23,7 @@ public class PlayerGunController : MonoBehaviour
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
-    void FixedUpdate()
+    void Update()
     {
         if (gameManager.IsRunning)
         {

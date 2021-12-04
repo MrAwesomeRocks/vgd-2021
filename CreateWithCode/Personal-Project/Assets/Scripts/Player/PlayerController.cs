@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour
                 // Once the player is on the ground, they aren't moving down anymore
                 if (verticalVelocity < 0)
                 {
-                    Debug.Log("Reset vertical velocity!");
                     verticalVelocity = 0;
                 }
             }
@@ -100,11 +99,12 @@ public class PlayerController : MonoBehaviour
                 mazeManager.StartPlatform.GetComponent<StartPlatformController>().OnPlayerLeave();
                 Debug.Log("Sent maze start message");
             }
-            if (hit.collider.gameObject.name == "Finish Platform")
+            else if (hit.collider.gameObject.name == mazeManager.FinishPlatform.name)
             {
                 mazeManager.FinishPlatform.GetComponent<FinishPlatfromController>().OnPlayerEnter();
+                Debug.Log("Sent maze finish message");
             }
-            if (hit.collider.gameObject.CompareTag("Enemy"))
+            else if (hit.collider.gameObject.CompareTag("Enemy"))
             {
                 // TODO: Fighting
                 gameManager.GameLost();
