@@ -1879,6 +1879,11 @@ Transform:
   m_Father: {fileID: 700527297}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 60, y: 270, z: 0}
+--- !u!198 &623977556 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7674450493109668377, guid: cfb8fb50f9c21a24286c5967588f16fa, type: 3}
+  m_PrefabInstance: {fileID: 1779059811}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &700527296
 GameObject:
   m_ObjectHideFlags: 0
@@ -6544,6 +6549,9 @@ MonoBehaviour:
   damage: 10
   range: 100
   fpsCamera: {fileID: 963194227}
+  muzzleFlash: {fileID: 623977556}
+  mazeImpactEffect: {fileID: 19800006, guid: 9e95c7b2183a4f345aaf86846f8f1918, type: 3}
+  nonMazeImpactEffect: {fileID: 19800002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}
 --- !u!1 &2115813242
 GameObject:
   m_ObjectHideFlags: 0

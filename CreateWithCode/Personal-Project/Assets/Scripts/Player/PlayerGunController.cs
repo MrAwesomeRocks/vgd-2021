@@ -7,6 +7,13 @@ public class PlayerGunController : MonoBehaviour
     [SerializeField] float damage;
     [SerializeField] float range;
     [SerializeField] Camera fpsCamera;
+
+    // Effects
+    [SerializeField] ParticleSystem muzzleFlash;
+    [SerializeField] ParticleSystem mazeImpactEffect;
+    [SerializeField] ParticleSystem nonMazeImpactEffect;
+
+    // Game managers
     GameManager gameManager;
     StatsTracker statsTracker;
 
@@ -44,6 +51,8 @@ public class PlayerGunController : MonoBehaviour
 
     void Shoot()
     {
+        muzzleFlash.Play();
+
         Vector3 fireDirection = fpsCamera.transform.forward * range;
         Vector3 fireStartPoint = fpsCamera.transform.position;
 
@@ -53,11 +62,21 @@ public class PlayerGunController : MonoBehaviour
 
             if (target != null)
             {
+                // Hit an enemy or powerup
                 target.TakeDamage(damage);
+                Instantiate(nonMazeImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             }
-        }
+            else
+            {
+                if (hit.transform.CompareTag("Ground") || hit.transform.CompareTag("MazeWall") || hit.transform.CompareTag("Platform"))
+                {
+                    // Hit the maze
+                    Instantiate(mazeImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                }
+            }
 
-        // Draw the fire ray
-        Debug.DrawRay(fireStartPoint, fireDirection, Color.red);
+            // Draw the fire ray
+            Debug.DrawRay(fireStartPoint, fireDirection, Color.red);
+        }
     }
 }

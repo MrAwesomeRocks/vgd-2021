@@ -8,6 +8,8 @@ TagManager:
   - Enemy
   - Platform
   - Powerup
+  - FxTemporaire
+  - MazeWall
   layers:
   - Default
   - TransparentFX
