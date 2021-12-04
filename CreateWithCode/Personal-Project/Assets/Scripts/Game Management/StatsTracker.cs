@@ -11,7 +11,7 @@ public class StatsTracker : MonoBehaviour
     public int Score
     {
         get { return score; }
-        protected set
+        set
         {
             score = value;
             UpdateScoreDisplay();
@@ -25,13 +25,28 @@ public class StatsTracker : MonoBehaviour
     public int Health
     {
         get { return health; }
-        protected set
+        set
         {
             health = value;
             UpdateHealthDisplay();
         }
     }
     [SerializeField] TextMeshProUGUI healthText;
+
+    // The player ammo
+    int ammo;
+    [SerializeField] int startingAmmo;
+    [SerializeField] int ammoClipSize;
+    public int Ammo
+    {
+        get { return ammo; }
+        set
+        {
+            ammo = value;
+            UpdateAmmoDisplay();
+        }
+    }
+    [SerializeField] TextMeshProUGUI ammoText;
 
     // Game manager
     GameManager gameManager;
@@ -44,6 +59,7 @@ public class StatsTracker : MonoBehaviour
     {
         Score = 0;
         Health = startingHealth;
+        Ammo = startingAmmo;
 
         gameManager = GetComponent<GameManager>();
     }
@@ -61,5 +77,11 @@ public class StatsTracker : MonoBehaviour
         {
             gameManager.GameLost();
         }
+    }
+
+    public void UpdateAmmoDisplay()
+    {
+
+        ammoText.text = $"Ammo: {Ammo % ammoClipSize}/{Ammo} ({Ammo / ammoClipSize}";
     }
 }

@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 8330063987641712161}
   - component: {fileID: 8330063987641712160}
   - component: {fileID: 8330063987641712607}
+  - component: {fileID: -4284110374224084969}
   m_Layer: 0
   m_Name: Ammo
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,3 +97,17 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-4284110374224084969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8330063987641712606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f0e335530f10a4889aef59f2e9f74a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 20
+  ammoIncrease: 50
