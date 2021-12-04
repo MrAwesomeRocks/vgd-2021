@@ -29,8 +29,15 @@ public class PlayerGunController : MonoBehaviour
         {
             if (Input.GetButtonDown("Fire1") && statsTracker.Ammo > 0)
             {
-                Shoot();
-                statsTracker.Ammo--;
+                if (statsTracker.GunReloaded)
+                {
+                    Shoot();
+                    statsTracker.Ammo--;
+                }
+                else
+                {
+                    statsTracker.GunReloaded = true;
+                }
             }
         }
     }
@@ -42,12 +49,12 @@ public class PlayerGunController : MonoBehaviour
 
         if (Physics.Raycast(fireStartPoint, fireDirection, out RaycastHit hit, range))
         {
-                ShotTarget target = hit.transform.GetComponent<ShotTarget>();
+            ShotTarget target = hit.transform.GetComponent<ShotTarget>();
 
-                if (target != null)
-                {
-                    target.TakeDamage(damage);
-                }
+            if (target != null)
+            {
+                target.TakeDamage(damage);
+            }
         }
 
         // Draw the fire ray
