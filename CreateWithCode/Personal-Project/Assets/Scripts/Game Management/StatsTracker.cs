@@ -34,29 +34,6 @@ public class StatsTracker : MonoBehaviour
     [SerializeField] TextMeshProUGUI healthText;
 
     // The player ammo
-    int ammo;
-    bool gunReloaded;
-    [SerializeField] int startingAmmo;
-    [SerializeField] int ammoClipSize;
-    public int Ammo
-    {
-        get { return ammo; }
-        set
-        {
-            ammo = value;
-            if (Ammo % ammoClipSize == 0) { GunReloaded = false; }
-            UpdateAmmoDisplay();
-        }
-    }
-    public bool GunReloaded
-    {
-        get { return gunReloaded; }
-        set
-        {
-            gunReloaded = value;
-            UpdateAmmoDisplay();
-        }
-    }
     [SerializeField] TextMeshProUGUI ammoText;
 
     // Game manager
@@ -70,8 +47,6 @@ public class StatsTracker : MonoBehaviour
     {
         Score = 0;
         Health = startingHealth;
-        Ammo = startingAmmo;
-        GunReloaded = true;
 
         gameManager = GetComponent<GameManager>();
     }
@@ -91,23 +66,8 @@ public class StatsTracker : MonoBehaviour
         }
     }
 
-    public void UpdateAmmoDisplay()
+    public void UpdateAmmoDisplay(int ammoInGun, int ammoRemaining, int ammoClipSize)
     {
-        int ammoInGun = Ammo % ammoClipSize;
-        int clipsRemaining = Ammo / ammoClipSize;
-        if (ammoInGun == 0)
-        {
-            if (GunReloaded)
-            {
-                clipsRemaining--;
-                ammoInGun = ammoClipSize;
-            }
-            else
-            {
-                ammoInGun = 0;
-            }
-        }
-
-        ammoText.text = $"Ammo: {ammoInGun}/{ammoClipSize} ({clipsRemaining})";
+        ammoText.text = $"Ammo: {ammoInGun}/{ammoClipSize} ({ammoRemaining})";
     }
 }

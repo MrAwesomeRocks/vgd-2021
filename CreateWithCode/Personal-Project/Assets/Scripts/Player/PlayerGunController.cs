@@ -2,27 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AbstractWeaponController))]
 public class PlayerGunController : MonoBehaviour
 {
-    // Control vars
-    [SerializeField] float damage;
-    [SerializeField] float range;
-    [SerializeField] float impactForce;
-    [SerializeField]
-    float fireRate;
-
-    // Effects
-    [SerializeField] ParticleSystem muzzleFlash;
-    [SerializeField] ParticleSystem mazeImpactEffect;
-    [SerializeField] ParticleSystem nonMazeImpactEffect;
-
-    // Other
     [SerializeField] Camera fpsCamera;
+    [SerializeField] KeyCode reloadKey;
     GameManager gameManager;
     StatsTracker statsTracker;
-
-    // Bookeeping
-    float nextTimeToFire = 0f;
+    AbstractWeaponController weaponController;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -32,6 +19,13 @@ public class PlayerGunController : MonoBehaviour
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         statsTracker = GameObject.Find("Game Manager").GetComponent<StatsTracker>();
+        weaponController = GetComponent<AbstractWeaponController>();
+
+        statsTracker.UpdateAmmoDisplay(
+            weaponController.AmmoInGun,
+            weaponController.AmmoRemaining,
+            weaponController.AmmoClipSize
+        );
     }
 
     /// <summary>
@@ -41,56 +35,33 @@ public class PlayerGunController : MonoBehaviour
     {
         if (gameManager.IsRunning)
         {
-            if (Input.GetButton("Fire1") && statsTracker.Ammo > 0 && Time.time >= nextTimeToFire)
+            if (Input.GetButton("Fire1"))
             {
-                nextTimeToFire = Time.time + 1f / fireRate;
-                if (statsTracker.GunReloaded)
+                Debug.Log("Fire1");
+                if (weaponController.GunReloaded)
                 {
-                    Shoot();
-                    statsTracker.Ammo--;
+                    weaponController.Shoot(fpsCamera.transform.forward, fpsCamera.transform.position);
                 }
                 else
                 {
-                    statsTracker.GunReloaded = true;
+                    weaponController.Reload();
                 }
+                statsTracker.UpdateAmmoDisplay(
+                    weaponController.AmmoInGun,
+                    weaponController.AmmoRemaining,
+                    weaponController.AmmoClipSize
+                );
             }
-        }
-    }
-
-    void Shoot()
-    {
-        muzzleFlash.Play();
-
-        Vector3 fireDirection = fpsCamera.transform.forward * range;
-        Vector3 fireStartPoint = fpsCamera.transform.position;
-
-        if (Physics.Raycast(fireStartPoint, fireDirection, out RaycastHit hit, range))
-        {
-            ShotTarget target = hit.transform.GetComponent<ShotTarget>();
-
-            if (target != null)
+            if (Input.GetKeyDown(reloadKey))
             {
-                // Hit an enemy or powerup
-                target.TakeDamage(damage);
-                Instantiate(nonMazeImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-
+                Debug.Log("reload");
+                weaponController.Reload();
+                statsTracker.UpdateAmmoDisplay(
+                    weaponController.AmmoInGun,
+                    weaponController.AmmoRemaining,
+                    weaponController.AmmoClipSize
+                );
             }
-            else
-            {
-                if (hit.transform.CompareTag("Ground") || hit.transform.CompareTag("MazeWall") || hit.transform.CompareTag("Platform"))
-                {
-                    // Hit the maze
-                    Instantiate(mazeImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-                }
-            }
-
-            if (hit.rigidbody != null)
-            {
-                hit.rigidbody.AddForce(-hit.normal * impactForce);
-            }
-
-            // Draw the fire ray
-            Debug.DrawRay(fireStartPoint, fireDirection, Color.red);
         }
     }
 }

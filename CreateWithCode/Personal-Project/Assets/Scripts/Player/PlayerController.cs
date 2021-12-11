@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float verticalVelocity;
 
     // Components
+    public PlayerWeaponSwitcher weaponSwitcher;
     GameManager gameManager;
     MazeManager mazeManager;
     CharacterController characterController;
