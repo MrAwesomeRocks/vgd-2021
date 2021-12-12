@@ -183,7 +183,8 @@ MonoBehaviour:
   m_text: "You have been kidnapped by space-faring\nducks and placed into this maze
     as part of\ntheir human expirements. You must find your\nway out of the maze
     to escape!\n\nUse WASD to move, space to jump, and \nleft-click to shoot. Enemies
-    are red and \nincrease your score when shot, powerups are\ngreen and give ammo."
+    are red and \nincrease your score when shot, powerups are\ngreen and give ammo.
+    Scroll to swap weapons."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3627,7 +3628,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1272824013
 RectTransform:
   m_ObjectHideFlags: 0

@@ -654,7 +654,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingAmmo: 100
   ammoClipSize: 20
-  damage: 5
+  damage: 3
   range: 40
   impactForce: 5
   fireRate: 10
