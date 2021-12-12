@@ -150,6 +150,7 @@ MonoBehaviour:
   range: 50
   impactForce: 5
   fireRate: 3
+  reloadTime: 0.5
   muzzleFlash: {fileID: 7674450493109668377}
   mazeImpactEffect: {fileID: 19800006, guid: 9e95c7b2183a4f345aaf86846f8f1918, type: 3}
   nonMazeImpactEffect: {fileID: 19800002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}

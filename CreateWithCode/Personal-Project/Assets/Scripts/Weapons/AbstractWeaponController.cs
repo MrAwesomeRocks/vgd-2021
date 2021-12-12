@@ -8,18 +8,8 @@ public abstract class AbstractWeaponController : MonoBehaviour
     // Ammo information
     [SerializeField] protected int startingAmmo;
     [SerializeField] protected int ammoClipSize;
-   int ammoInGun;
-    public int AmmoInGun
-    {
-        get { return ammoInGun; }
-        protected set { ammoInGun = value; }
-    }
-    int ammoRemaining;
-    public int AmmoRemaining
-    {
-        get { return ammoRemaining; }
-        protected set { ammoRemaining = value; }
-    }
+    public int AmmoInGun { get; protected set; }
+    public int AmmoRemaining { get; protected set; }
     /// <summary>
     /// The amount of ammunition in the gun.
     /// </summary>
@@ -46,12 +36,14 @@ public abstract class AbstractWeaponController : MonoBehaviour
         get { return ammoClipSize; }
         protected set { ammoClipSize = value; }
     }
+    public bool IsReloading { get; protected set; }
 
     // Control vars
     [SerializeField] protected float damage;
     [SerializeField] protected float range;
     [SerializeField] protected float impactForce;
     [SerializeField] protected float fireRate;
+    [SerializeField] protected float reloadTime;
 
     // Effects
     [SerializeField] protected ParticleSystem muzzleFlash;
@@ -89,9 +81,9 @@ public abstract class AbstractWeaponController : MonoBehaviour
         Debug.Log("SHOOT!");
         fireDirection *= range;
 
-        if (Time.time < nextTimeToFire || !GunReloaded || Ammo <= 0)
+        if (Time.time < nextTimeToFire || !GunReloaded || IsReloading || Ammo <= 0)
         {
-            // Still on fire cooldown or not reloaded or out of ammo
+            // Still on fire cooldown or not reloaded (yet) or out of ammo
             return false;
         }
 
@@ -142,14 +134,21 @@ public abstract class AbstractWeaponController : MonoBehaviour
 
     public virtual void Reload()
     {
-        if (Time.time < nextTimeToFire || AmmoRemaining <= 0)
+        if (Time.time < nextTimeToFire || AmmoRemaining <= 0 || IsReloading)
         {
-            // Still on fire cooldown or out of ammo to reload
+            // Still on fire cooldown or out of ammo to reload or already reloading
             return;
         }
         nextTimeToFire = Time.time + 1f / fireRate;
+        StartCoroutine(ReloadWithDelay());
+    }
 
+    protected virtual IEnumerator ReloadWithDelay()
+    {
+        IsReloading = true;
         gunAudio.PlayOneShot(reloadSound);
+
+        yield return new WaitForSeconds(reloadTime);
 
         int ammoToMove = AmmoClipSize - AmmoInGun;
         if (ammoToMove < AmmoRemaining)
@@ -162,5 +161,6 @@ public abstract class AbstractWeaponController : MonoBehaviour
             AmmoInGun += AmmoRemaining;
             AmmoRemaining = 0;
         }
+        IsReloading = false;
     }
 }

@@ -654,10 +654,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingAmmo: 100
   ammoClipSize: 20
-  damage: 2
+  damage: 5
   range: 40
   impactForce: 5
   fireRate: 10
+  reloadTime: 1
   muzzleFlash: {fileID: 38325371536646436}
   mazeImpactEffect: {fileID: 19800006, guid: 9e95c7b2183a4f345aaf86846f8f1918, type: 3}
   nonMazeImpactEffect: {fileID: 19800002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}
