@@ -71,6 +71,19 @@ public abstract class AbstractWeaponController : MonoBehaviour
     }
 
     /// <summary>
+    /// This function is called when the object becomes enabled and active.
+    /// </summary>
+    void OnEnable()
+    {
+        if (IsReloading)
+        {
+            // Switched weapons in the middle of reloading,
+            // restart the reload coroutine
+            StartCoroutine(ReloadWithDelay());
+        }
+    }
+
+    /// <summary>
     /// Shoot a bullet with this gun.
     /// </summary>
     /// <param name="fireDirection">The direction the bullet was fired.</param>
@@ -141,6 +154,11 @@ public abstract class AbstractWeaponController : MonoBehaviour
         }
         nextTimeToFire = Time.time + 1f / fireRate;
         StartCoroutine(ReloadWithDelay());
+    }
+
+    public virtual void AddAmmo(int amount)
+    {
+        AmmoRemaining += amount;
     }
 
     protected virtual IEnumerator ReloadWithDelay()

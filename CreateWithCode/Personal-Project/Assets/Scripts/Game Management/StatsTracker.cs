@@ -66,8 +66,8 @@ public class StatsTracker : MonoBehaviour
         }
     }
 
-    public void UpdateAmmoDisplay(int ammoInGun, int ammoRemaining, int ammoClipSize)
+    public void UpdateAmmoDisplay(AbstractWeaponController weapon)
     {
-        ammoText.text = $"Ammo: {ammoInGun}/{ammoClipSize} ({ammoRemaining})";
+        ammoText.text = $"Ammo: {weapon.AmmoInGun}/{weapon.AmmoClipSize} ({weapon.AmmoRemaining})";
     }
 }

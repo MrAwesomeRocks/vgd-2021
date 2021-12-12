@@ -21,11 +21,7 @@ public class PlayerGunController : MonoBehaviour
         statsTracker = GameObject.Find("Game Manager").GetComponent<StatsTracker>();
         weaponController = GetComponent<AbstractWeaponController>();
 
-        statsTracker.UpdateAmmoDisplay(
-            weaponController.AmmoInGun,
-            weaponController.AmmoRemaining,
-            weaponController.AmmoClipSize
-        );
+        statsTracker.UpdateAmmoDisplay(weaponController);
     }
 
     /// <summary>
@@ -46,21 +42,13 @@ public class PlayerGunController : MonoBehaviour
                 {
                     weaponController.Reload();
                 }
-                statsTracker.UpdateAmmoDisplay(
-                    weaponController.AmmoInGun,
-                    weaponController.AmmoRemaining,
-                    weaponController.AmmoClipSize
-                );
+                statsTracker.UpdateAmmoDisplay(weaponController);
             }
             if (Input.GetKeyDown(reloadKey))
             {
                 Debug.Log("reload");
                 weaponController.Reload();
-                statsTracker.UpdateAmmoDisplay(
-                    weaponController.AmmoInGun,
-                    weaponController.AmmoRemaining,
-                    weaponController.AmmoClipSize
-                );
+                statsTracker.UpdateAmmoDisplay(weaponController);
             }
         }
     }

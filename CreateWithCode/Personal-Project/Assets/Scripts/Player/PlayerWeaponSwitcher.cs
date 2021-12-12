@@ -6,6 +6,7 @@ public class PlayerWeaponSwitcher : MonoBehaviour
 {
     [SerializeField] int selectedWeapon = 0;
     GameManager gameManager;
+    StatsTracker statsTracker;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -14,6 +15,7 @@ public class PlayerWeaponSwitcher : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        statsTracker = GameObject.Find("Game Manager").GetComponent<StatsTracker>();
 
         SelectWeapon();
     }
@@ -84,10 +86,18 @@ public class PlayerWeaponSwitcher : MonoBehaviour
             }
             i++;
         }
+        statsTracker.UpdateAmmoDisplay(GetCurrentWeapon());
     }
 
     public void AddAmmoToCurrentGun(int amount)
     {
-        //TODO
+        AbstractWeaponController weapon = GetCurrentWeapon();
+        weapon.AddAmmo(amount);
+        statsTracker.UpdateAmmoDisplay(weapon);
+    }
+
+    public AbstractWeaponController GetCurrentWeapon()
+    {
+        return transform.GetChild(selectedWeapon).GetComponent<AbstractWeaponController>();
     }
 }
