@@ -4209,7 +4209,9 @@ MonoBehaviour:
   mouseSensitivity: 3
   verticalLookRange: 60
   jumpSpeed: 7.5
-  verticalVelocity: 0
+  meeleDamage: 10
+  meeleDamageDelay: 1
+  hurtSound: {fileID: 8300000, guid: 207a4ceb6527f084f8ec3698995025ba, type: 3}
   weaponSwitcher: {fileID: 451894011}
 --- !u!143 &1451749847
 CharacterController:

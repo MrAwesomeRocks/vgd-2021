@@ -60,7 +60,7 @@ public class StatsTracker : MonoBehaviour
     {
         healthText.text = $"Health: {Health}/{startingHealth}";
 
-        if (Health < 0)
+        if (Health <= 0)
         {
             gameManager.GameLost();
         }

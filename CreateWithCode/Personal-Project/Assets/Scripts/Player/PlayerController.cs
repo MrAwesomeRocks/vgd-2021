@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(AudioSource))]
 public class PlayerController : MonoBehaviour
 {
     // Control vars
@@ -10,16 +10,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float mouseSensitivity;
     [SerializeField] float verticalLookRange;
     [SerializeField] float jumpSpeed;
+    [SerializeField] int meeleDamage;
+    [SerializeField] float meeleDamageDelay;
+
+    // Audio
+    [SerializeField] AudioClip hurtSound;
+    AudioSource playerAudio;
 
     // Bookeeping
     byte numJumps;
     float verticalRotation;
-    [SerializeField] float verticalVelocity;
+    float verticalVelocity;
+    float nextMeeleDamageTime = 0f;
 
     // Components
     public PlayerWeaponSwitcher weaponSwitcher;
     GameManager gameManager;
     MazeManager mazeManager;
+    StatsTracker statsTracker;
     CharacterController characterController;
 
     // Start is called before the first frame update
@@ -32,7 +40,9 @@ public class PlayerController : MonoBehaviour
 
         // Get components
         characterController = GetComponent<CharacterController>();
+        playerAudio = GetComponent<AudioSource>();
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        statsTracker = GameObject.Find("Game Manager").GetComponent<StatsTracker>();
         mazeManager = GameObject.Find("Game Manager").GetComponent<MazeManager>();
     }
 
@@ -107,8 +117,13 @@ public class PlayerController : MonoBehaviour
             }
             else if (hit.collider.gameObject.CompareTag("Enemy"))
             {
-                // TODO: Fighting
-                gameManager.GameLost();
+                if (Time.time >= nextMeeleDamageTime)
+                {
+                    statsTracker.Health -= meeleDamage;
+                    playerAudio.PlayOneShot(hurtSound);
+
+                    nextMeeleDamageTime = Time.time + meeleDamageDelay;
+                }
             }
         }
     }
