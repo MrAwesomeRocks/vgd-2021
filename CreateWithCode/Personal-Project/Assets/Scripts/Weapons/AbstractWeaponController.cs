@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public abstract class AbstractWeaponController : MonoBehaviour
 {
     // Ammo information
     [SerializeField] protected int startingAmmo;
     [SerializeField] protected int ammoClipSize;
-    [SerializeField] int ammoInGun;
+   int ammoInGun;
     public int AmmoInGun
     {
         get { return ammoInGun; }
         protected set { ammoInGun = value; }
     }
-    [SerializeField] int ammoRemaining;
+    int ammoRemaining;
     public int AmmoRemaining
     {
         get { return ammoRemaining; }
@@ -57,6 +58,11 @@ public abstract class AbstractWeaponController : MonoBehaviour
     [SerializeField] protected ParticleSystem mazeImpactEffect;
     [SerializeField] protected ParticleSystem nonMazeImpactEffect;
 
+    // Audio
+    [SerializeField] protected AudioClip fireSound;
+    [SerializeField] protected AudioClip reloadSound;
+    AudioSource gunAudio;
+
     // Bookeeping
     protected float nextTimeToFire = 0f;
 
@@ -68,6 +74,8 @@ public abstract class AbstractWeaponController : MonoBehaviour
     {
         Ammo = startingAmmo;
         Debug.Log(Ammo);
+
+        gunAudio = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -89,7 +97,9 @@ public abstract class AbstractWeaponController : MonoBehaviour
 
         AmmoInGun--;
         nextTimeToFire = Time.time + 1f / fireRate;
+
         muzzleFlash.Play();
+        gunAudio.PlayOneShot(fireSound);
 
         if (Physics.Raycast(fireStartPoint, fireDirection, out RaycastHit hit, range))
         {
@@ -138,6 +148,8 @@ public abstract class AbstractWeaponController : MonoBehaviour
             return;
         }
         nextTimeToFire = Time.time + 1f / fireRate;
+
+        gunAudio.PlayOneShot(reloadSound);
 
         int ammoToMove = AmmoClipSize - AmmoInGun;
         if (ammoToMove < AmmoRemaining)

@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] AudioSource playerAudio;
     [SerializeField] AudioClip winSound;
     [SerializeField] AudioClip loseSound;
-    [SerializeField] AudioClip actionSound;
 
     #region Unity Messages
     /// <summary>
@@ -175,8 +174,7 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
 
         cameraAudio.Stop();
-        // TODO: Sounds
-        // playerAudio.PlayOneShot(winSound);
+        playerAudio.PlayOneShot(winSound);
     }
 
     public void GameLost()
@@ -188,8 +186,7 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
 
         cameraAudio.Stop();
-        // TODO: Sounds
-        // playerAudio.PlayOneShot(loseSound);
+        playerAudio.PlayOneShot(loseSound);
     }
 
     public void MazeStarted()
@@ -210,19 +207,6 @@ public class GameManager : MonoBehaviour
         backButton.SetActive(false);
         winScreen.SetActive(false);
         loseScreen.SetActive(false);
-    }
-
-    IEnumerator PlaySoundNumTimes(AudioClip sound, int numTimes)
-    {
-        for (int i = 0; i < numTimes; i++)
-        {
-            playerAudio.PlayOneShot(sound);
-
-            while (playerAudio.isPlaying)
-            {
-                yield return new WaitForSeconds(0.1f);
-            }
-        }
     }
     #endregion
 }
