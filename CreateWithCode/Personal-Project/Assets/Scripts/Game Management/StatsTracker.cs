@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
+/// <summary>
+/// Part of the game managers, this one keeps track of stats and updates the game stats UI.
+/// </summary>
 [RequireComponent(typeof(GameManager))]
-public class StatsTracker : MonoBehaviour
-{
+public class StatsTracker : MonoBehaviour {
     // The player score
     int score;
+    /// <summary>
+    /// The player score. Setting updates the score display.
+    /// </summary>
     public int Score
     {
         get { return score; }
-        set
-        {
+        set {
             score = value;
             UpdateScoreDisplay();
         }
@@ -22,11 +26,13 @@ public class StatsTracker : MonoBehaviour
     // The player health
     int health;
     [SerializeField] int startingHealth;
+    /// <summary>
+    /// The player health. Setting updates the score display.
+    /// </summary>
     public int Health
     {
         get { return health; }
-        set
-        {
+        set {
             health = value;
             UpdateHealthDisplay();
         }
@@ -43,31 +49,38 @@ public class StatsTracker : MonoBehaviour
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
     /// </summary>
-    void Start()
-    {
+    void Start() {
+        // Init vars
         Score = 0;
         Health = startingHealth;
 
+        // Get components.
         gameManager = GetComponent<GameManager>();
     }
 
-    public void UpdateScoreDisplay()
-    {
+    /// <summary>
+    /// Update the score display with the current score.
+    /// </summary>
+    public void UpdateScoreDisplay() {
         scoreText.text = $"Score: {Score}";
     }
 
-    public void UpdateHealthDisplay()
-    {
+    /// <summary>
+    /// Update the health display with the current health.
+    /// </summary>
+    public void UpdateHealthDisplay() {
         healthText.text = $"Health: {Health}/{startingHealth}";
 
-        if (Health <= 0)
-        {
+        if (Health <= 0) {
             gameManager.GameLost();
         }
     }
 
-    public void UpdateAmmoDisplay(AbstractWeaponController weapon)
-    {
+    /// <summary>
+    /// Update the ammo display.
+    /// </summary>
+    /// <param name="weapon">The weapon to use for the ammo display.</param>
+    public void UpdateAmmoDisplay(AbstractWeaponController weapon) {
         ammoText.text = $"Ammo: {weapon.AmmoInGun}/{weapon.AmmoClipSize} ({weapon.AmmoRemaining})";
     }
 }

@@ -2,5 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RifleController : AbstractWeaponController
-{ }
+/// <summary>
+/// Simple subclass of the AbstractWeaponController.
+/// </summary>
+
+public class RifleController : AbstractWeaponController { }

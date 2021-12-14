@@ -1,26 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
 
-public class GameManager : MonoBehaviour
-{
-    // Game Management
+/// <summary>
+/// The main game manager. Handles game states and menus.
+/// </summary>
+public class GameManager : MonoBehaviour {
+    // Game states
     [SerializeField] bool isRunning;
+    /// <summary>
+    /// Is the game running?
+    /// </summary>
     public bool IsRunning
     {
         get { return isRunning; }
         protected set { isRunning = value; }
     }
     [SerializeField] bool playerStartedMaze;
+    /// <summary>
+    /// Has the player started the maze?
+    /// </summary>
     public bool PlayerStartedMaze
     {
         get { return playerStartedMaze; }
         protected set {
             Debug.Log("Player started the maze!");
-            playerStartedMaze = value; }
+            playerStartedMaze = value;
+        }
     }
 
     // UI elements
@@ -45,11 +54,12 @@ public class GameManager : MonoBehaviour
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
     /// </summary>
-    void Start()
-    {
+    void Start() {
+        // Reset game control vars.
         IsRunning = false;
         PlayerStartedMaze = false;
 
+        // Stop all audio
         cameraAudio.Stop();
         playerAudio.Stop();
 
@@ -60,17 +70,14 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
-    void Update()
-    {
-        if (Input.GetButtonDown("Cancel"))
-        {
-            if (IsRunning)
-            {
+    void Update() {
+        // Check for the pause menu
+        if (Input.GetButtonDown("Cancel")) {
+            // Player hit Escape
+            if (IsRunning) {
                 // In the game, show the pause menu
                 PauseGame();
-            }
-            else if (pauseScreen.activeSelf)
-            {
+            } else if (pauseScreen.activeSelf) {
                 // In the pause menu, leave it
                 UnPauseGame();
             }
@@ -79,8 +86,11 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Menu Functions
-    public void StartGame()
-    {
+    /// <summary>
+    /// Start the game
+    /// </summary>
+    public void StartGame() {
+        // Set the control variable
         IsRunning = true;
 
         // Show the game UI
@@ -94,9 +104,14 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public void PauseGame()
-    {
+    /// <summary>
+    /// Pause the game
+    /// </summary>
+    public void PauseGame() {
+        // Set the control variable
         IsRunning = false;
+
+        // Show the pause screen
         pauseScreen.SetActive(true);
 
         // Stop all audio
@@ -107,9 +122,14 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
     }
 
-    public void UnPauseGame()
-    {
+    /// <summary>
+    /// Unpause the game. DIFFERENT FROM START!!!
+    /// </summary>
+    public void UnPauseGame() {
+        // Set the control variable
         IsRunning = true;
+
+        // Hide the pause screen
         pauseScreen.SetActive(false);
 
         // Resume the audio
@@ -120,84 +140,128 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public void ShowSettings()
-    {
+    /// <summary>
+    /// Show the settings screen
+    /// </summary>
+    public void ShowSettings() {
+        // Reset UI
         HideAllUI();
+
+        // Show screen and back button
         settingsScreen.SetActive(true);
         backButton.SetActive(true);
     }
 
-    public void ShowDirections()
-    {
+    /// <summary>
+    /// Show the directions screen
+    /// </summary>
+    public void ShowDirections() {
+        // Reset UI
         HideAllUI();
+
+        // Show screen and back button
         directionsScreen.SetActive(true);
         backButton.SetActive(true);
     }
 
-    public void ShowCredits()
-    {
+    /// <summary>
+    /// Show the credits screen
+    /// </summary>
+    public void ShowCredits() {
+        // Reset UI
         HideAllUI();
+
+        // Show screen and back button
         creditsScreen.SetActive(true);
         backButton.SetActive(true);
     }
 
-    public void ShowTitleScreen()
-    {
+    /// <summary>
+    /// Show the title screen.
+    /// For the back button.
+    /// </summary>
+    public void ShowTitleScreen() {
+        // Reset UI
         HideAllUI();
+
+        // Show screen
         titleScreen.SetActive(true);
     }
 
-    public void RestartGame()
-    {
+    /// <summary>
+    /// Restart the game
+    /// </summary>
+    public void RestartGame() {
+        // Reload the scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void QuitGame()
-    {
+    /// <summary>
+    /// Quit the game
+    /// </summary>
+    public void QuitGame() {
         Debug.Log("Application is exiting!");
 
 #if UNITY_EDITOR
+        // In the Unity Editor
         UnityEditor.EditorApplication.isPlaying = false;
 #else
+        // In a built app
         Application.Quit();
 #endif
     }
     #endregion
 
     #region Game Events
-    public void GameWon()
-    {
+    /// <summary>
+    /// Play the game win sequence.
+    /// </summary>
+    public void GameWon() {
+        // Stop the game
         IsRunning = false;
+
+        // Show the win screen.
         winScreen.SetActive(true);
 
         // Release the mouse
         Cursor.lockState = CursorLockMode.None;
 
+        // Play the win audio.
         cameraAudio.Stop();
         playerAudio.PlayOneShot(winSound);
     }
 
-    public void GameLost()
-    {
+    /// <summary>
+    /// Play the game lose sequence.
+    /// </summary>
+    public void GameLost() {
+        // Stop the game
         IsRunning = false;
+
+        // Show the lose screen
         loseScreen.SetActive(true);
 
         // Release the mouse
         Cursor.lockState = CursorLockMode.None;
 
+        // Play the win audio
         cameraAudio.Stop();
         playerAudio.PlayOneShot(loseSound);
     }
 
-    public void MazeStarted()
-    {
+    /// <summary>
+    /// Set that the maze has been started.
+    /// </summary>
+    public void MazeStarted() {
         PlayerStartedMaze = true;
     }
     #endregion
 
     #region Utilities
-    void HideAllUI()
-    {
+    /// <summary>
+    /// Reset all the UI by hiding it.
+    /// </summary>
+    void HideAllUI() {
         titleScreen.SetActive(false);
         gameUIScreen.SetActive(false);
         pauseScreen.SetActive(false);

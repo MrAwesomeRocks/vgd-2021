@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The main controller of the player, handling movement and collisions.
+/// </summary>
 [RequireComponent(typeof(CharacterController), typeof(AudioSource))]
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
     // Control vars
     [SerializeField] float movementSpeed;
     [SerializeField] float mouseSensitivity;
@@ -31,8 +33,7 @@ public class PlayerController : MonoBehaviour
     CharacterController characterController;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         // Init vars
         numJumps = 0;
         verticalRotation = 0;
@@ -47,19 +48,16 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (gameManager.IsRunning)
-        {
+    void Update() {
+        // Only do things when the game is running
+        if (gameManager.IsRunning) {
             //$ Ground check
-            if (characterController.isGrounded)
-            {
+            if (characterController.isGrounded) {
                 // Done jumping
                 numJumps = 0;
 
                 // Once the player is on the ground, they aren't moving down anymore
-                if (verticalVelocity < 0)
-                {
+                if (verticalVelocity < 0) {
                     verticalVelocity = 0;
                 }
             }
@@ -81,8 +79,7 @@ public class PlayerController : MonoBehaviour
 
             //$ Y Movement (Jump + Gravity)
             // Jumping
-            if (numJumps < 2 && Input.GetButtonDown("Jump"))
-            {
+            if (numJumps < 2 && Input.GetButtonDown("Jump")) {
                 numJumps++;
                 verticalVelocity += jumpSpeed;
             }
@@ -100,25 +97,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (gameManager.IsRunning)
-        {
-            if (!gameManager.PlayerStartedMaze && hit.collider.gameObject.CompareTag("Ground"))
-            {
+    void OnControllerColliderHit(ControllerColliderHit hit) {
+        // Only do things when the game is running
+        if (gameManager.IsRunning) {
+            // Check for collisions
+            if (!gameManager.PlayerStartedMaze && hit.collider.gameObject.CompareTag("Ground")) {
                 // Player started the maze
                 mazeManager.StartPlatform.GetComponent<StartPlatformController>().OnPlayerLeave();
                 Debug.Log("Sent maze start message");
-            }
-            else if (hit.collider.gameObject.name == mazeManager.FinishPlatform.name)
-            {
+            } else if (hit.collider.gameObject.name == mazeManager.FinishPlatform.name) {
+                // Player finished the maze
                 mazeManager.FinishPlatform.GetComponent<FinishPlatfromController>().OnPlayerEnter();
                 Debug.Log("Sent maze finish message");
-            }
-            else if (hit.collider.gameObject.CompareTag("Enemy"))
-            {
-                if (Time.time >= nextMeeleDamageTime)
-                {
+            } else if (hit.collider.gameObject.CompareTag("Enemy")) {
+                // Player hit an enemy (which currently is only a meele enemy)
+                if (Time.time >= nextMeeleDamageTime) {
                     statsTracker.Health -= meeleDamage;
                     playerAudio.PlayOneShot(hurtSound);
 
@@ -128,8 +121,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void MoveToStartPosition(float x, float z)
-    {
+    /// <summary>
+    /// Move the player to the start position of the maze.
+    /// </summary>
+    /// <param name="x">The x-pos of the player.</param>
+    /// <param name="z">The z-pos of the player.</param>
+    public void MoveToStartPosition(float x, float z) {
         transform.position = new Vector3(x, 0.5f, z);
     }
 }

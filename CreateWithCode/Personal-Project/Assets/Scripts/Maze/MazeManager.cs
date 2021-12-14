@@ -2,20 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MazeManager : MonoBehaviour
-{
+/// <summary>
+/// Part of the game managers, this one for the maze.
+/// </summary>
+public class MazeManager : MonoBehaviour {
     public const int MAZE_RANGE = 100;
     public const int TILE_SIZE = 10;
 
+    /// <summary>
+    /// The start platform of the maze.
+    /// </summary>
     public GameObject StartPlatform { get; protected set; }
+    /// <summary>
+    /// The finish platform of the maze.
+    /// </summary>
     public GameObject FinishPlatform { get; protected set; }
 
-    // Maze stuff
+    // Maze prefabs and their container
     [SerializeField] GameObject mazeWallPrefab;
     [SerializeField] GameObject startPlatformPrefab;
     [SerializeField] GameObject finishPlatformPrefab;
     [SerializeField] Transform mazeContainer;
+
+    // The player
     [SerializeField] PlayerController player;
+
+    // The maze and the possible mazes.
+    char[,] maze;
+
     char[,] maze1 = {{'#', '#', '#', '#', '#', '#', '#', '#', '#', ' ', '#', '#', '#', '#', '#', '#', '#', '#', '#', 'E', '#'},
                      {'#', '#', '#', '#', '#', '#', '#', '#', '#', ' ', '#', '#', '#', '#', '#', '#', '#', '#', '#', ' ', '#'},
                      {'#', '#', '#', '#', '#', '#', '#', '#', '#', ' ', '#', '#', '#', '#', '#', '#', '#', '#', '#', ' ', '#'},
@@ -58,32 +72,35 @@ public class MazeManager : MonoBehaviour
                      {'#', ' ', '#', '#', '#', '#', '#', ' ', '#', '#', '#', '#', '#', '#', ' ', '#', ' ', ' ', ' ', '#', ' '},
                      {'#', ' ', '#', '#', '#', '#', '#', ' ', '#', '#', '#', '#', '#', '#', ' ', '#', '#', '#', '#', '#', ' '},
                      {'#', ' ', '#', ' ', ' ', ' ', ' ', ' ', '#', '#', '#', '#', '#', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' '}};
-
-    char[,] maze;
+    /// <summary>
+    /// Possible maze spawn positions stored here to avoid recomputing.
+    /// </summary>
     List<(int X, int Z)> spawnPositions;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
     /// </summary>
-    void Start()
-    {
+    void Start() {
+        // Randomly select a maze.
         maze = Random.value > 0.5 ? maze1 : maze2;
 
         //! Create the maze
         //  Also get spawn positions
         spawnPositions = new List<(int X, int Z)>(20);
 
-        for (int r = 0; r < maze.GetLength(0); r++)
-        {
-            for (int c = 0; c < maze.GetLength(1); c++)
-            {
+        // Loop through every index of the maze
+        for (int r = 0; r < maze.GetLength(0); r++) {
+            for (int c = 0; c < maze.GetLength(1); c++) {
+                // Get the unity positions of that row and column.
                 var (posX, posZ) = (MatrixColToUnityX(c), MatrixRowToUnityZ(r));
 
-                if (maze[r, c] == '#')
-                {
-                    if (ShouldInstantiateWall(r, c))
-                    {
+                // Chose action for each type of maze square.
+                // TODO: make this into a switch statement
+                if (maze[r, c] == '#') {
+                    // Wall, check if it's needed (to have less game objects)
+                    if (ShouldInstantiateWall(r, c)) {
+                        // Needed, instantiate
                         Instantiate(
                             mazeWallPrefab,
                             new Vector3(posX, mazeWallPrefab.transform.position.y, posZ),
@@ -91,18 +108,16 @@ public class MazeManager : MonoBehaviour
                             mazeContainer
                         );
                     }
-                }
-                else if (maze[r, c] == 'E')
-                {
+                } else if (maze[r, c] == 'E') {
+                    // End platform, instantiate
                     FinishPlatform = Instantiate(
                         finishPlatformPrefab,
                         new Vector3(posX, finishPlatformPrefab.transform.position.y, posZ),
                         finishPlatformPrefab.transform.rotation,
                         mazeContainer
                     );
-                }
-                else if (maze[r, c] == 'S')
-                {
+                } else if (maze[r, c] == 'S') {
+                    // Start platform, move player and instantiate platform
                     player.MoveToStartPosition(posX, posZ);
                     StartPlatform = Instantiate(
                         startPlatformPrefab,
@@ -110,122 +125,117 @@ public class MazeManager : MonoBehaviour
                         startPlatformPrefab.transform.rotation,
                         mazeContainer
                     );
-                }
-                else if (maze[r, c] == ' ')
-                {
+                } else if (maze[r, c] == ' ') {
+                    // Possible spawn position
                     spawnPositions.Add((posX, posZ));
                 }
             }
         }
 
-        foreach (var (X, Z) in spawnPositions)
-        {
+        foreach (var (X, Z) in spawnPositions) {
+            // Print spawn positions
             Debug.Log($"({X}, {Z})");
         }
     }
 
     #region Matrix-Unity Converters
-    public static int MatrixRowToUnityZ(int row)
-    {
+    /// <summary>
+    /// Go from a maze matrix row to a Unity Z coordinate.
+    /// </summary>
+    /// <param name="row">The maze matrix row.</param>
+    /// <returns>The Unity Z coordinate.</returns>
+    public static int MatrixRowToUnityZ(int row) {
         return 100 - row * 10;
     }
 
-    public static int MatrixColToUnityX(int col)
-    {
+    /// <summary>
+    /// Go from a maze matrix column to a Unity X coordinate.
+    /// </summary>
+    /// <param name="col">The maze matrix column.</param>
+    /// <returns>The Unity X coordinate.</returns>
+    public static int MatrixColToUnityX(int col) {
         return 10 * col - 100;
     }
 
-    public static int UnityZToMatrixRow(int z)
-    {
+    /// <summary>
+    /// Go from a Unity Z coordinate to a maze matrix row.
+    /// </summary>
+    /// <param name="z">The Unity Z coordinate.</param>
+    /// <returns>The maze matrix row.</returns>
+    public static int UnityZToMatrixRow(int z) {
         return (100 - z) / 10;
     }
 
-    public static int UnityXToMatrixCol(int x)
-    {
+    /// <summary>
+    /// Go from a Unity X coordinate to a maze matrix column.
+    /// </summary>
+    /// <param name="x">The Unity X coordinate.</param>
+    /// <returns>The maze matrix column.</returns>
+    public static int UnityXToMatrixCol(int x) {
         return (x + 100) / 10;
     }
     #endregion
 
-    public (int X, int Z) GetRandomSpawnPosition()
-    {
+    /// <summary>
+    /// Get a random maze spawn position.
+    /// </summary>
+    /// <returns>The maze spawn position as a tuple. Will be the center of a maze square.</returns>
+    public (int X, int Z) GetRandomSpawnPosition() {
         int index = Random.Range(0, spawnPositions.Count);
         return spawnPositions[index];
     }
 
-    bool ShouldInstantiateWall(int row, int col)
-    {
+    bool ShouldInstantiateWall(int row, int col) {
+        // Only instantiate a wall in this spot if there are no walls in any direction.
         bool wallLeft, wallRight, wallAbove, wallBelow,
              wallAboveRight, wallAboveLeft, wallBelowRight, wallBelowLeft;
 
-        try
-        {
+        // Check each direction, if it's out of bounds, then there's a wall
+        try {
             wallLeft = maze[row, col - 1] == '#';
-        }
-        catch (System.IndexOutOfRangeException)
-        {
+        } catch (System.IndexOutOfRangeException) {
             wallLeft = true;
         }
 
-        try
-        {
+        try {
             wallRight = maze[row, col + 1] == '#';
-        }
-        catch (System.IndexOutOfRangeException)
-        {
+        } catch (System.IndexOutOfRangeException) {
             wallRight = true;
         }
 
-        try
-        {
+        try {
             wallAbove = maze[row - 1, col] == '#';
-        }
-        catch (System.IndexOutOfRangeException)
-        {
+        } catch (System.IndexOutOfRangeException) {
             wallAbove = true;
         }
 
-        try
-        {
+        try {
             wallBelow = maze[row + 1, col] == '#';
-        }
-        catch (System.IndexOutOfRangeException)
-        {
+        } catch (System.IndexOutOfRangeException) {
             wallBelow = true;
         }
 
-        try
-        {
+        try {
             wallAboveRight = maze[row - 1, col + 1] == '#';
-        }
-        catch (System.IndexOutOfRangeException)
-        {
+        } catch (System.IndexOutOfRangeException) {
             wallAboveRight = true;
         }
 
-        try
-        {
+        try {
             wallAboveLeft = maze[row - 1, col - 1] == '#';
-        }
-        catch (System.IndexOutOfRangeException)
-        {
+        } catch (System.IndexOutOfRangeException) {
             wallAboveLeft = true;
         }
 
-        try
-        {
+        try {
             wallBelowRight = maze[row + 1, col + 1] == '#';
-        }
-        catch (System.IndexOutOfRangeException)
-        {
+        } catch (System.IndexOutOfRangeException) {
             wallBelowRight = true;
         }
 
-        try
-        {
+        try {
             wallBelowLeft = maze[row + 1, col - 1] == '#';
-        }
-        catch (System.IndexOutOfRangeException)
-        {
+        } catch (System.IndexOutOfRangeException) {
             wallBelowLeft = true;
         }
 

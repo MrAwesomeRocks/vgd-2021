@@ -2,26 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// An <see langword="abstract"/> class for managing weapons.
+/// Most weapons can simply subclass this without any overrides.
+/// </summary>
 [RequireComponent(typeof(AudioSource))]
-public abstract class AbstractWeaponController : MonoBehaviour
-{
+public abstract class AbstractWeaponController : MonoBehaviour {
     // Ammo information
     [SerializeField] protected int startingAmmo;
     [SerializeField] protected int ammoClipSize;
+    /// <summary>
+    /// The amount of ammo in the gun's clip.
+    /// </summary>
     public int AmmoInGun { get; protected set; }
+    /// <summary>
+    /// The amount of ammo not in the gun.
+    /// </summary>
     public int AmmoRemaining { get; protected set; }
     /// <summary>
-    /// The amount of ammunition in the gun.
+    /// The total amount of ammunition in the gun.
+    /// This is a computed property from the ammo in the clip and the remaining ammo.
+    /// Assigning to Ammo puts as much ammo into the remaining as possible and the minimum into the clip.
     /// </summary>
     public int Ammo
     {
         get { return AmmoInGun + AmmoRemaining; }
-        protected set
-        {
+        protected set {
             AmmoInGun = value % ammoClipSize;
             AmmoRemaining = value - AmmoInGun;
         }
     }
+    /// <summary>
+    /// A computed property that simply checks if the ammo in the gun is greater than 0.
+    /// </summary>
     public bool GunReloaded
     {
         get { return AmmoInGun > 0; }
@@ -36,6 +49,9 @@ public abstract class AbstractWeaponController : MonoBehaviour
         get { return ammoClipSize; }
         protected set { ammoClipSize = value; }
     }
+    /// <summary>
+    /// A bool that is set when the gun is reloading to make sure that the gun isn't fired.
+    /// </summary>
     public bool IsReloading { get; protected set; }
 
     // Control vars
@@ -57,16 +73,14 @@ public abstract class AbstractWeaponController : MonoBehaviour
 
     // Bookeeping
     protected float nextTimeToFire = 0f;
-    System.Func<int> lastReloadCallback;
+    System.Action lastReloadCallback;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
     /// </summary>
-    void Start()
-    {
+    void Start() {
         Ammo = startingAmmo;
-        Debug.Log(Ammo);
 
         gunAudio = GetComponent<AudioSource>();
     }
@@ -74,10 +88,8 @@ public abstract class AbstractWeaponController : MonoBehaviour
     /// <summary>
     /// This function is called when the object becomes enabled and active.
     /// </summary>
-    void OnEnable()
-    {
-        if (IsReloading)
-        {
+    void OnEnable() {
+        if (IsReloading) {
             // Switched weapons in the middle of reloading,
             // restart the reload coroutine
             StartCoroutine(ReloadWithDelay(lastReloadCallback));
@@ -90,51 +102,50 @@ public abstract class AbstractWeaponController : MonoBehaviour
     /// <param name="fireDirection">The direction the bullet was fired.</param>
     /// <param name="fireStartPoint">The start point of the firing. Usually just `transform.position`.</param>
     /// <returns><see langword="true"/> if the bullet hit an enemy and <see langword="false"/> otherwise.</returns>
-    public virtual bool Shoot(Vector3 fireDirection, Vector3 fireStartPoint)
-    {
-        Debug.Log("SHOOT!");
+    public virtual bool Shoot(Vector3 fireDirection, Vector3 fireStartPoint) {
+        // Extend the fire direction for drawing the debug ray.
         fireDirection *= range;
+        Debug.Log("SHOOT!");
 
-        if (Time.time < nextTimeToFire || !GunReloaded || IsReloading || Ammo <= 0)
-        {
+        if (Time.time < nextTimeToFire || !GunReloaded || IsReloading || Ammo <= 0) {
             // Still on fire cooldown or not reloaded (yet) or out of ammo
             return false;
         }
 
+        // Decrease the ammo in the gun and reset the fire cooldown
         AmmoInGun--;
         nextTimeToFire = Time.time + 1f / fireRate;
 
+        // Play effects
         muzzleFlash.Play();
         gunAudio.PlayOneShot(fireSound);
 
-        if (Physics.Raycast(fireStartPoint, fireDirection, out RaycastHit hit, range))
-        {
-            Debug.Log("HIT");
+        // Check if the gun hit anything
+        if (Physics.Raycast(fireStartPoint, fireDirection, out RaycastHit hit, range)) {
             // Hit something
+            Debug.Log("HIT");
             ShotTarget target = hit.transform.GetComponent<ShotTarget>();
 
             // Take damage and spawn impact effects
-            if (target != null)
-            {
+            if (target != null) {
                 // Hit an enemy or powerup
                 target.TakeDamage(damage);
                 Instantiate(nonMazeImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 return true;
-            }
-            else
-            {
-                if (hit.transform.CompareTag("Ground")
-                    || hit.transform.CompareTag("MazeWall")
-                    || hit.transform.CompareTag("Platform"))
-                {
+            } else {
+                if (
+                  hit.transform.CompareTag("Ground") ||
+                  hit.transform.CompareTag("MazeWall") ||
+                  hit.transform.CompareTag("Platform")
+                ) {
                     // Hit the maze
                     Instantiate(mazeImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 }
+                // Didn't hit anything that needs an effect, ignore
             }
 
             // Add force to hit rigidbody
-            if (hit.rigidbody != null)
-            {
+            if (hit.rigidbody != null) {
                 hit.rigidbody.AddForce(-hit.normal * impactForce);
             }
 
@@ -146,43 +157,70 @@ public abstract class AbstractWeaponController : MonoBehaviour
         return false;
     }
 
-    public virtual void AddAmmo(int amount)
-    {
+    /// <summary>
+    /// Add ammo to this weapon.
+    /// </summary>
+    /// <param name="amount">How much ammo to add.</param>
+    public virtual void AddAmmo(int amount) {
         AmmoRemaining += amount;
     }
 
-    public virtual void Reload(System.Func<int> callback)
-    {
-        if (Time.time < nextTimeToFire || AmmoRemaining <= 0 || IsReloading)
-        {
+    /// <summary>
+    /// Reload the weapon.
+    /// </summary>
+    public void Reload() {
+        Reload(() => { });
+    }
+
+    /// <summary>
+    /// Reload the weapon with a <paramref name="callback"/> to run when finished.
+    /// </summary>
+    /// <param name="callback">A callback to run after the reload is finished. Useful for updating UI.</param>
+    public virtual void Reload(System.Action callback) {
+        if (Time.time < nextTimeToFire || AmmoRemaining <= 0 || IsReloading) {
             // Still on fire cooldown or out of ammo to reload or already reloading
             return;
         }
+        // Restart cooldown
         nextTimeToFire = Time.time + 1f / fireRate;
 
+        // Save callback in case weapons are switched while reloading, then start reload
         lastReloadCallback = callback;
         StartCoroutine(ReloadWithDelay(callback));
     }
 
-    protected virtual IEnumerator ReloadWithDelay(System.Func<int> callback)
-    {
+    /// <summary>
+    /// Reload the weapon after a certain delay.
+    /// Used internally by Reload.
+    /// </summary>
+    /// <param name="callback">The callback to run after the reload is finished.</param>
+    /// <returns>A coroutine.</returns>
+    protected virtual IEnumerator ReloadWithDelay(System.Action callback) {
+        // Set the reloading flag to prevent firing
         IsReloading = true;
+
+        // Play effects
         gunAudio.PlayOneShot(reloadSound);
 
+        // Wait for the reload time
         yield return new WaitForSeconds(reloadTime);
 
+        // Reload the gun
         int ammoToMove = AmmoClipSize - AmmoInGun;
-        if (ammoToMove < AmmoRemaining)
-        {
+        if (ammoToMove < AmmoRemaining) {
+            // Enough ammo for a full reload, fill clip and deduct from the remaining ammo
             AmmoInGun = AmmoClipSize;
             AmmoRemaining -= ammoToMove;
-        }
-        else
-        {
+        } else {
+            // Not enough ammo, fill clip as much as possible and empty the remaining ammo
             AmmoInGun += AmmoRemaining;
             AmmoRemaining = 0;
         }
+
+        // Reset reloading flag
         IsReloading = false;
+
+        // Call the callback
         callback();
     }
 }

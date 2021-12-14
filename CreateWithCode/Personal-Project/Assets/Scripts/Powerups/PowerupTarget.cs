@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerupTarget : ShotTarget
-{
-    public override void HealthDepleted()
-    {
+/// <summary>
+/// A simple powerup. Should be subclassed.
+/// </summary>
+public class PowerupTarget : ShotTarget {
+    public override void HealthDepleted() {
+        // Just simply destroy the game object
         Destroy(gameObject);
     }
 }

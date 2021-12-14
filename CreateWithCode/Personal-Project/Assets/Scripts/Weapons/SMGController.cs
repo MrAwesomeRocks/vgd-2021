@@ -2,5 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SMGController : AbstractWeaponController
-{ }
+/// <summary>
+/// Simple subclass of the AbstractWeaponController.
+/// </summary>
+public class SMGController : AbstractWeaponController { }
