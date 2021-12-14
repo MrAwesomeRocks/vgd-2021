@@ -57,6 +57,7 @@ public abstract class AbstractWeaponController : MonoBehaviour
 
     // Bookeeping
     protected float nextTimeToFire = 0f;
+    System.Func<int> lastReloadCallback;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -79,7 +80,7 @@ public abstract class AbstractWeaponController : MonoBehaviour
         {
             // Switched weapons in the middle of reloading,
             // restart the reload coroutine
-            StartCoroutine(ReloadWithDelay());
+            StartCoroutine(ReloadWithDelay(lastReloadCallback));
         }
     }
 
@@ -145,7 +146,12 @@ public abstract class AbstractWeaponController : MonoBehaviour
         return false;
     }
 
-    public virtual void Reload()
+    public virtual void AddAmmo(int amount)
+    {
+        AmmoRemaining += amount;
+    }
+
+    public virtual void Reload(System.Func<int> callback)
     {
         if (Time.time < nextTimeToFire || AmmoRemaining <= 0 || IsReloading)
         {
@@ -153,15 +159,12 @@ public abstract class AbstractWeaponController : MonoBehaviour
             return;
         }
         nextTimeToFire = Time.time + 1f / fireRate;
-        StartCoroutine(ReloadWithDelay());
+
+        lastReloadCallback = callback;
+        StartCoroutine(ReloadWithDelay(callback));
     }
 
-    public virtual void AddAmmo(int amount)
-    {
-        AmmoRemaining += amount;
-    }
-
-    protected virtual IEnumerator ReloadWithDelay()
+    protected virtual IEnumerator ReloadWithDelay(System.Func<int> callback)
     {
         IsReloading = true;
         gunAudio.PlayOneShot(reloadSound);
@@ -180,5 +183,6 @@ public abstract class AbstractWeaponController : MonoBehaviour
             AmmoRemaining = 0;
         }
         IsReloading = false;
+        callback();
     }
 }

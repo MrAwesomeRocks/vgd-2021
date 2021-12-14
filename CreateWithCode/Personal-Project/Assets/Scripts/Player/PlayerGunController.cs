@@ -37,18 +37,17 @@ public class PlayerGunController : MonoBehaviour
                 if (weaponController.GunReloaded)
                 {
                     weaponController.Shoot(fpsCamera.transform.forward, fpsCamera.transform.position);
+                    statsTracker.UpdateAmmoDisplay(weaponController);
                 }
                 else
                 {
-                    weaponController.Reload();
+                    weaponController.Reload(() => { statsTracker.UpdateAmmoDisplay(weaponController); return 0; });
                 }
-                statsTracker.UpdateAmmoDisplay(weaponController);
             }
             if (Input.GetKeyDown(reloadKey))
             {
                 Debug.Log("reload");
-                weaponController.Reload();
-                statsTracker.UpdateAmmoDisplay(weaponController);
+                weaponController.Reload(() => { statsTracker.UpdateAmmoDisplay(weaponController); return 0; });
             }
         }
     }
