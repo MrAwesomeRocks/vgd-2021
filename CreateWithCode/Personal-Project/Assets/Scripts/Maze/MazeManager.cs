@@ -145,7 +145,7 @@ public class MazeManager : MonoBehaviour {
     /// <param name="row">The maze matrix row.</param>
     /// <returns>The Unity Z coordinate.</returns>
     public static int MatrixRowToUnityZ(int row) {
-        return 100 - row * 10;
+        return MAZE_RANGE - row * TILE_SIZE;
     }
 
     /// <summary>
@@ -154,7 +154,7 @@ public class MazeManager : MonoBehaviour {
     /// <param name="col">The maze matrix column.</param>
     /// <returns>The Unity X coordinate.</returns>
     public static int MatrixColToUnityX(int col) {
-        return 10 * col - 100;
+        return TILE_SIZE * col - MAZE_RANGE;
     }
 
     /// <summary>
@@ -163,7 +163,7 @@ public class MazeManager : MonoBehaviour {
     /// <param name="z">The Unity Z coordinate.</param>
     /// <returns>The maze matrix row.</returns>
     public static int UnityZToMatrixRow(int z) {
-        return (100 - z) / 10;
+        return (MAZE_RANGE - z) / TILE_SIZE;
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ public class MazeManager : MonoBehaviour {
     /// <param name="x">The Unity X coordinate.</param>
     /// <returns>The maze matrix column.</returns>
     public static int UnityXToMatrixCol(int x) {
-        return (x + 100) / 10;
+        return (x + MAZE_RANGE) / TILE_SIZE;
     }
     #endregion
 
