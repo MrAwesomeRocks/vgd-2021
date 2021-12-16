@@ -94,40 +94,56 @@ public class MazeManager : MonoBehaviour {
             for (int c = 0; c < maze.GetLength(1); c++) {
                 // Get the unity positions of that row and column.
                 var (posX, posZ) = (MatrixColToUnityX(c), MatrixRowToUnityZ(r));
+                char elem = maze[r, c];
 
                 // Chose action for each type of maze square.
-                // TODO: make this into a switch statement
-                if (maze[r, c] == '#') {
-                    // Wall, check if it's needed (to have less game objects)
-                    if (ShouldInstantiateWall(r, c)) {
-                        // Needed, instantiate
-                        Instantiate(
-                            mazeWallPrefab,
-                            new Vector3(posX, mazeWallPrefab.transform.position.y, posZ),
-                            mazeWallPrefab.transform.rotation,
+                switch (elem) {
+                    // Wall
+                    case '#':
+                        // Check if it's needed (to have less game objects)
+                        if (ShouldInstantiateWall(r, c)) {
+                            // Needed, instantiate
+                            Instantiate(
+                                mazeWallPrefab,
+                                new Vector3(posX, mazeWallPrefab.transform.position.y, posZ),
+                                mazeWallPrefab.transform.rotation,
+                                mazeContainer
+                            );
+                        }
+                        break;
+
+                    // Start platform
+                    case 'S':
+                        // Move player and instantiate platform
+                        player.MoveToStartPosition(posX, posZ);
+                        StartPlatform = Instantiate(
+                            startPlatformPrefab,
+                            new Vector3(posX, startPlatformPrefab.transform.position.y, posZ),
+                            startPlatformPrefab.transform.rotation,
                             mazeContainer
                         );
-                    }
-                } else if (maze[r, c] == 'E') {
-                    // End platform, instantiate
-                    FinishPlatform = Instantiate(
-                        finishPlatformPrefab,
-                        new Vector3(posX, finishPlatformPrefab.transform.position.y, posZ),
-                        finishPlatformPrefab.transform.rotation,
-                        mazeContainer
-                    );
-                } else if (maze[r, c] == 'S') {
-                    // Start platform, move player and instantiate platform
-                    player.MoveToStartPosition(posX, posZ);
-                    StartPlatform = Instantiate(
-                        startPlatformPrefab,
-                        new Vector3(posX, startPlatformPrefab.transform.position.y, posZ),
-                        startPlatformPrefab.transform.rotation,
-                        mazeContainer
-                    );
-                } else if (maze[r, c] == ' ') {
-                    // Possible spawn position
-                    spawnPositions.Add((posX, posZ));
+                        break;
+
+                    // End platform
+                    case 'E':
+                        // instantiate
+                        FinishPlatform = Instantiate(
+                            finishPlatformPrefab,
+                            new Vector3(posX, finishPlatformPrefab.transform.position.y, posZ),
+                            finishPlatformPrefab.transform.rotation,
+                            mazeContainer
+                        );
+                        break;
+
+                    // Empty square
+                    case ' ':
+                        // Possible spawn position
+                        spawnPositions.Add((posX, posZ));
+                        break;
+
+                    // This should never happen
+                    default:
+                        throw new System.InvalidOperationException($"Invalid maze element {elem} at position ({r}, {c}).");
                 }
             }
         }
