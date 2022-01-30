@@ -1,3 +1,6 @@
+# Blender autosave
+*.blend1
+
 # Unity Stuff
 /NuGet/
 
