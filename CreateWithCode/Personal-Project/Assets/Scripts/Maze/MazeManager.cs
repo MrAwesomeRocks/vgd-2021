@@ -146,7 +146,7 @@ public class MazeManager : MonoBehaviour {
         int end_col;
         do {
             end_col = (Random.Range(0, 2 * WIDTH) + 1) / 2;
-        } while (StartEndTileInWall(grid, HEIGHT - 1, start_col));
+        } while (StartEndTileInWall(grid, HEIGHT - 1, end_col));
         grid[HEIGHT - 1, end_col] = 'E';
 
         return grid;
